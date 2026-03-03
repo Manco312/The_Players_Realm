@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { BookService } from '@/services/BookService.js';
 import { useRoute } from 'vue-router';
+import BookReviews from '@/components/BookReviews.vue';
+import { Formatter } from '@/utils/Formatter.js';
 
 const route = useRoute();
 const bookId = Number(route.params.id);
@@ -52,7 +54,7 @@ const book = BookService.getBookById(bookId);
                 </div>
                 <div class="flex justify-between">
                   <span class="text-gray-600">Price:</span>
-                  <span class="font-medium">${{ book.price }}</span>
+                  <span class="font-medium">${{ Formatter.formatToCOP(book.price) }} COP</span>
                 </div>
                 <div class="flex justify-between">
                   <span class="text-gray-600">Stock:</span>
@@ -62,6 +64,9 @@ const book = BookService.getBookById(bookId);
                 </div>
               </div>
             </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md p-6 mt-8">
+            <BookReviews :book-id="book.id" />
           </div>
         </div>
       </div>

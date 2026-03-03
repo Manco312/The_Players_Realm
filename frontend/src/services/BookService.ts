@@ -15,4 +15,11 @@ export class BookService {
     const id = useBookStore().books.length + 1;
     useBookStore().books.push({ id, ...book });
   }
+
+  static getUniqueBookCategories(): string[] {
+    const books = BookService.getBooks();
+    const categories = books.map((book) => book.category);
+    const uniqueCategories = new Set(categories);
+    return Array.from(uniqueCategories);
+  }
 }
