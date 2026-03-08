@@ -1,6 +1,9 @@
 import { createPinia } from 'pinia';
 import { watch } from 'vue';
-import { bookSeeder } from '@/stores/bookseeder.js';
+
+import { userSeeder } from '@/stores/userseeder.js';
+import { studioSeeder } from '@/stores/studioseeder.js';
+import { videogameSeeder } from '@/stores/videogameseeder.js';
 import { reviewSeeder } from '@/stores/reviewseeder.js';
 
 export default class PiniaConfig {
@@ -8,24 +11,31 @@ export default class PiniaConfig {
     const pinia = createPinia();
 
     const savedState = localStorage.getItem('piniaState');
+
     if (savedState) {
       pinia.state.value = JSON.parse(savedState);
     } else {
       // initialize the state with the seeders
       pinia.state.value = {
-        book: {
-          books: bookSeeder,
+        user: {
+          users: userSeeder,
+        },
+        studio: {
+          studios: studioSeeder,
+        },
+        videogame: {
+          videogames: videogameSeeder,
         },
         review: {
           reviews: reviewSeeder,
         },
       };
 
-      // save the initial state to localStorage
+      // save initial state
       localStorage.setItem('piniaState', JSON.stringify(pinia.state.value));
     }
 
-    // watch for changes and save to localStorage
+    // persist state changes
     watch(
       pinia.state,
       (state) => {
