@@ -13,7 +13,7 @@ import { RouterLink } from 'vue-router';
 
         <nav>
           <RouterLink
-            to="/"
+            to="/login"
             class="text-xl font-semibold text-[#F2F3D9] transition hover:text-[#DC9E82]"
           >
             Login
@@ -28,7 +28,7 @@ import { RouterLink } from 'vue-router';
         <h1 class="text-4xl font-bold leading-tight md:text-6xl">Welcome to The Player’s Realm!</h1>
 
         <RouterLink
-          to="/"
+          to="/login"
           class="mt-8 inline-block rounded-lg bg-[#C16E70] px-10 py-4 text-lg font-semibold text-[#030027] shadow-md transition hover:scale-105 hover:bg-[#DC9E82]"
         >
           Enter the Realm!

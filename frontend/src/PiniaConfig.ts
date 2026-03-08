@@ -15,7 +15,6 @@ export default class PiniaConfig {
     if (savedState) {
       pinia.state.value = JSON.parse(savedState);
     } else {
-      // initialize the state with the seeders
       pinia.state.value = {
         user: {
           users: userSeeder,
@@ -29,13 +28,14 @@ export default class PiniaConfig {
         review: {
           reviews: reviewSeeder,
         },
+        auth: {
+          currentUser: null,
+        },
       };
 
-      // save initial state
       localStorage.setItem('piniaState', JSON.stringify(pinia.state.value));
     }
 
-    // persist state changes
     watch(
       pinia.state,
       (state) => {
