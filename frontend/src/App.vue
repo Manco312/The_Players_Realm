@@ -1,11 +1,22 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router';
+// Made by: Santiago Manco
+import { RouterLink, RouterView, useRoute } from 'vue-router';
+import { computed } from 'vue';
+
+const route = useRoute();
+
+const isLandingLayout = computed(() => route.meta.layout === 'landing');
 </script>
 
 <template>
-  <div class="bg-gray-100 min-h-screen">
+  <!-- Landing layout -->
+  <div v-if="isLandingLayout" class="min-h-screen">
+    <RouterView />
+  </div>
+
+  <!-- Dashboard layout -->
+  <div v-else class="bg-gray-100 min-h-screen">
     <div class="flex h-screen overflow-hidden">
-      <!-- sidebar -->
       <aside class="w-64 bg-gray-800 text-white shadow-lg fixed h-full flex flex-col">
         <div class="p-6 flex-1">
           <div class="flex items-center mb-8">
@@ -21,6 +32,7 @@ import { RouterLink, RouterView } from 'vue-router';
               <i class="fas fa-home mr-3"></i>
               <span>Home</span>
             </RouterLink>
+
             <RouterLink
               to="/about"
               class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 transition duration-200"
@@ -28,6 +40,7 @@ import { RouterLink, RouterView } from 'vue-router';
               <i class="fas fa-info-circle mr-3"></i>
               <span>About</span>
             </RouterLink>
+
             <RouterLink
               to="/books"
               class="flex items-center px-4 py-3 rounded-lg hover:bg-gray-700 transition duration-200"
@@ -51,9 +64,7 @@ import { RouterLink, RouterView } from 'vue-router';
         </div>
       </aside>
 
-      <!-- main content area -->
       <div class="flex-1 flex flex-col overflow-hidden ml-64">
-        <!-- top header -->
         <header class="bg-white shadow-sm border-b border-gray-200">
           <div class="px-6 py-4 flex items-center justify-between">
             <div>
@@ -61,6 +72,7 @@ import { RouterLink, RouterView } from 'vue-router';
                 {{ $route.meta.title }}
               </h1>
             </div>
+
             <div class="flex items-center space-x-4">
               <button
                 class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition duration-200"
@@ -76,7 +88,6 @@ import { RouterLink, RouterView } from 'vue-router';
           </div>
         </header>
 
-        <!-- main content -->
         <main class="flex-1 overflow-y-auto p-6">
           <RouterView />
         </main>
