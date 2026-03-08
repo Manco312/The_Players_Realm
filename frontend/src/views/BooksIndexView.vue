@@ -32,7 +32,10 @@ watch(selectedCategory, (newCategory) => {
       </div>
 
       <div class="flex justify-end mb-6">
-        <select v-model="selectedCategory" class="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:ring focus:border-blue-300">
+        <select
+          v-model="selectedCategory"
+          class="w-full border border-gray-300 rounded py-2 px-3 focus:outline-none focus:ring focus:border-blue-300"
+        >
           <option value="">All Categories</option>
           <option v-for="category in selectorCategories" :key="category" :value="category">
             {{ category }}
