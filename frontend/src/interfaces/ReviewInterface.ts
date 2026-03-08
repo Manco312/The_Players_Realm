@@ -1,8 +1,8 @@
+// Made by: Santiago Manco
 export interface ReviewInterface {
   id: number;
-  bookId: number;
-  rating: number;
   comment: string;
-  author?: string;
-  createdAt?: string;
+  rating: number;
+  userId: number;
+  videogameId: number;
 }

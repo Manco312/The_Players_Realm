@@ -8,9 +8,7 @@ const props = defineProps<{
   bookId: number;
 }>();
 
-const reviews = computed(() =>
-  ReviewService.getReviewsByBookId(props.bookId),
-);
+const reviews = computed(() => ReviewService.getReviewsByBookId(props.bookId));
 
 const form = ref<CreateReviewDTO>({
   bookId: props.bookId,
