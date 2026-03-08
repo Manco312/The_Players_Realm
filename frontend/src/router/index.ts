@@ -1,3 +1,4 @@
+// Made by: Santiago Manco
 import { createRouter, createWebHistory } from 'vue-router';
 import LandingView from '@/views/LandingView.vue';
 import LoginView from '@/views/LoginView.vue';

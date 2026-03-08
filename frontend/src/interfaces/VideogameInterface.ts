@@ -1,3 +1,4 @@
+// Made by: Santiago Manco
 export interface VideogameInterface {
   id: number;
   name: string;

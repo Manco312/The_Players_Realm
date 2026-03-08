@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// Made by: Santiago Manco
 import { ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/authstore.js';
@@ -96,15 +97,6 @@ const handleLogin = () => {
               >
                 Sign In
               </button>
-
-              <div class="text-left">
-                <a
-                  href="#"
-                  class="text-sm font-medium text-[#151E3F] underline transition hover:text-[#C16E70]"
-                >
-                  Forgot password?
-                </a>
-              </div>
             </form>
           </div>
         </div>

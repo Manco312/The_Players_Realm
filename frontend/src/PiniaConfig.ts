@@ -1,3 +1,4 @@
+// Made by: Santiago Manco
 import { createPinia } from 'pinia';
 import { watch } from 'vue';
 

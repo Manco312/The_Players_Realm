@@ -1,3 +1,4 @@
+// Made by: Santiago Manco
 import type { StudioInterface } from '@/interfaces/StudioInterface';
 
 export const studioSeeder: StudioInterface[] = [

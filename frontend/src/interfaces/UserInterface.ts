@@ -1,3 +1,4 @@
+// Made by: Santiago Manco
 import type { Role } from '@/types/UserRole';
 
 export interface UserInterface {

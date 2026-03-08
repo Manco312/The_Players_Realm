@@ -1,10 +1,10 @@
 <script setup lang="ts">
+// Made by: Santiago Manco
 import { RouterLink } from 'vue-router';
 </script>
 
 <template>
   <div class="min-h-screen bg-[#030027] text-[#F2F3D9]">
-    <!-- Navbar -->
     <header class="bg-[#151E3F]">
       <div class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-10">
         <div class="flex items-center">
@@ -22,7 +22,6 @@ import { RouterLink } from 'vue-router';
       </div>
     </header>
 
-    <!-- Hero -->
     <section class="flex min-h-[58vh] flex-col items-center justify-center px-6 text-center">
       <div class="mx-auto max-w-5xl">
         <h1 class="text-4xl font-bold leading-tight md:text-6xl">Welcome to The Player’s Realm!</h1>
@@ -41,17 +40,14 @@ import { RouterLink } from 'vue-router';
       </div>
     </section>
 
-    <!-- Bottom section -->
     <section class="bg-[#C16E70] px-6 py-12 md:px-10">
       <div class="mx-auto grid max-w-6xl gap-8 md:grid-cols-2">
-        <!-- Image 1 placeholder -->
         <img
           src="/images/landing-1.png"
           alt="Landing preview 1"
           class="h-56 w-full rounded-sm object-cover shadow-sm"
         />
 
-        <!-- Image 2 placeholder -->
         <img
           src="/images/landing-2.png"
           alt="Landing preview 2"

@@ -1,3 +1,4 @@
+// Made by: Santiago Manco
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { VideogameInterface } from '@/interfaces/VideogameInterface';

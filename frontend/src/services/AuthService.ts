@@ -1,3 +1,4 @@
+// Made by: Santiago Manco
 import { useUserStore } from '@/stores/userstore.js';
 import type { UserInterface } from '@/interfaces/UserInterface';
 

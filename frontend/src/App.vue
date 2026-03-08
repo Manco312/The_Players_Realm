@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// Made by: Santiago Manco
 import { RouterLink, RouterView, useRoute } from 'vue-router';
 import { computed } from 'vue';
 
@@ -16,7 +17,6 @@ const isLandingLayout = computed(() => route.meta.layout === 'landing');
   <!-- Dashboard layout -->
   <div v-else class="bg-gray-100 min-h-screen">
     <div class="flex h-screen overflow-hidden">
-      <!-- sidebar -->
       <aside class="w-64 bg-gray-800 text-white shadow-lg fixed h-full flex flex-col">
         <div class="p-6 flex-1">
           <div class="flex items-center mb-8">
@@ -64,7 +64,6 @@ const isLandingLayout = computed(() => route.meta.layout === 'landing');
         </div>
       </aside>
 
-      <!-- main content -->
       <div class="flex-1 flex flex-col overflow-hidden ml-64">
         <header class="bg-white shadow-sm border-b border-gray-200">
           <div class="px-6 py-4 flex items-center justify-between">

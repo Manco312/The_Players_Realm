@@ -1,3 +1,4 @@
+// Made by: Santiago Manco
 import { defineStore } from 'pinia';
 import { computed, ref } from 'vue';
 import type { UserInterface } from '@/interfaces/UserInterface';

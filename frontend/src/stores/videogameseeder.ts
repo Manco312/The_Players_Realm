@@ -1,3 +1,4 @@
+// Made by: Santiago Manco
 import type { VideogameInterface } from '@/interfaces/VideogameInterface';
 
 export const videogameSeeder: VideogameInterface[] = [

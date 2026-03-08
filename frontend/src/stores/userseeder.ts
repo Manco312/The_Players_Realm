@@ -1,3 +1,4 @@
+// Made by: Santiago Manco
 import type { UserInterface } from '@/interfaces/UserInterface';
 
 export const userSeeder: UserInterface[] = [
