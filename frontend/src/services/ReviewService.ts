@@ -2,6 +2,7 @@
 
 // Internal Imports
 import type { ChartData } from '@/types/ChartTypes';
+import type { CreateReviewDTO } from '@/dtos/CreateReviewDTO';
 import type { ReviewInterface } from '@/interfaces/ReviewInterface';
 import { useReviewStore } from '@/stores/reviewstore';
 
@@ -14,10 +15,10 @@ export class ReviewService {
     return useReviewStore().reviews.filter((review) => review.videogameId === videogameId);
   }
 
-  static createReview(review: Omit<ReviewInterface, 'id'>): void {
+  static createReview(review: CreateReviewDTO): void {
     const store = useReviewStore();
-    const nextId =
-      store.reviews.length > 0 ? Math.max(...store.reviews.map((r) => r.id), 0) + 1 : 1;
+    const nextId = store.reviews.length > 0 ? Math.max(...store.reviews.map((r) => r.id)) + 1 : 1;
+
     store.reviews.push({
       id: nextId,
       ...review,
