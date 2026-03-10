@@ -1,7 +1,9 @@
 // Made by: Santiago Manco
-import type { ReviewInterface } from '@/interfaces/ReviewInterface';
+
+// Internal Imports
 import type { ChartData } from '@/types/ChartTypes';
-import { useReviewStore } from '@/stores/reviewstore.js';
+import type { ReviewInterface } from '@/interfaces/ReviewInterface';
+import { useReviewStore } from '@/stores/reviewstore';
 
 export class ReviewService {
   static getReviews(): ReviewInterface[] {

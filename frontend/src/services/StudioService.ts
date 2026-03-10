@@ -1,6 +1,8 @@
 // Made by: Santiago Manco
-import type { StudioInterface } from '@/interfaces/StudioInterface';
+
+// Internal Imports
 import type { ChartData } from '@/types/ChartTypes';
+import type { StudioInterface } from '@/interfaces/StudioInterface';
 
 function getStudiosByCountry(studios: StudioInterface[]): ChartData {
   const countryCounts: Record<string, number> = {};

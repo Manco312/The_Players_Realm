@@ -6,7 +6,7 @@ import { Doughnut } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement } from 'chart.js';
 
 // Internal Imports
-import type { ChartData } from '@/services/DashboardStatsService';
+import type { ChartData } from '@/types/ChartTypes';
 
 // Chart.js Registration
 ChartJS.register(Title, Tooltip, Legend, ArcElement);

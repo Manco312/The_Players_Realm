@@ -1,6 +1,8 @@
 // Made by: Santiago Manco
-import type { VideogameInterface } from '@/interfaces/VideogameInterface';
+
+// Internal Imports
 import type { ChartData } from '@/types/ChartTypes';
+import type { VideogameInterface } from '@/interfaces/VideogameInterface';
 
 function getVideogamesByGenre(videogames: VideogameInterface[]): ChartData {
   const genreCounts: Record<string, number> = {};

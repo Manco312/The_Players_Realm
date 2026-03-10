@@ -14,7 +14,7 @@ import {
 } from 'chart.js';
 
 // Internal Imports
-import type { ChartData } from '@/services/DashboardStatsService';
+import type { ChartData } from '@/types/ChartTypes';
 
 // Chart.js Registration
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
