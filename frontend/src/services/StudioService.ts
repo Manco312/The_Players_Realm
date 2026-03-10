@@ -2,10 +2,15 @@
 
 // Internal Imports
 import type { ChartData } from '@/types/ChartTypes';
-import type { StudioInterface } from '@/interfaces/StudioInterface';
+import { useStudioStore } from '@/stores/studiostore';
 
 export class StudioService {
-  static getStudiosByCountry(studios: StudioInterface[]): ChartData {
+  static getStudios() {
+    return useStudioStore().studios;
+  }
+
+  static getStudiosByCountry(): ChartData {
+    const studios = useStudioStore().studios;
     const countryCounts: Record<string, number> = {};
 
     studios.forEach((studio) => {

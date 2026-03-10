@@ -24,7 +24,8 @@ export class ReviewService {
     });
   }
 
-  static getRatingDistribution(reviews: ReviewInterface[]): ChartData {
+  static getRatingDistribution(): ChartData {
+    const reviews = useReviewStore().reviews;
     const ratingCounts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
 
     reviews.forEach((review) => {
@@ -45,7 +46,7 @@ export class ReviewService {
     };
   }
 
-  static getTotalReviews(reviews: ReviewInterface[]): number {
-    return reviews.length;
+  static getTotalReviews(): number {
+    return useReviewStore().reviews.length;
   }
 }

@@ -2,10 +2,15 @@
 
 // Internal Imports
 import type { ChartData } from '@/types/ChartTypes';
-import type { VideogameInterface } from '@/interfaces/VideogameInterface';
+import { useVideogameStore } from '@/stores/videogamestore';
 
 export class VideogameService {
-  static getVideogamesByGenre(videogames: VideogameInterface[]): ChartData {
+  static getVideogames() {
+    return useVideogameStore().videogames;
+  }
+
+  static getVideogamesByGenre(): ChartData {
+    const videogames = useVideogameStore().videogames;
     const genreCounts: Record<string, number> = {};
 
     videogames.forEach((game) => {
@@ -26,7 +31,8 @@ export class VideogameService {
     };
   }
 
-  static getSalesByGame(videogames: VideogameInterface[]): ChartData {
+  static getSalesByGame(): ChartData {
+    const videogames = useVideogameStore().videogames;
     const sortedGames = [...videogames].sort((a, b) => b.totalSales - a.totalSales).slice(0, 5);
 
     return {
@@ -43,7 +49,8 @@ export class VideogameService {
     };
   }
 
-  static getGamesByReleaseYear(videogames: VideogameInterface[]): ChartData {
+  static getGamesByReleaseYear(): ChartData {
+    const videogames = useVideogameStore().videogames;
     const yearCounts: Record<number, number> = {};
 
     videogames.forEach((game) => {
