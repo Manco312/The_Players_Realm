@@ -10,32 +10,31 @@ import AdminList from '@/components/AdminList.vue';
 import BarChart from '@/components/BarChart.vue';
 import DoughnutChart from '@/components/DoughnutChart.vue';
 import StatCard from '@/components/StatCard.vue';
-import DashboardStatsService from '@/services/DashboardStatsService';
+import { ReviewService } from '@/services/ReviewService';
+import StudioService from '@/services/StudioService';
+import UserService from '@/services/UserService';
+import VideogameService from '@/services/VideogameService';
 import { reviewSeeder } from '@/stores/reviewseeder';
 import { studioSeeder } from '@/stores/studioseeder';
 import { userSeeder } from '@/stores/userseeder';
 import { videogameSeeder } from '@/stores/videogameseeder';
 
 // Selectors
-const salesChartData = computed(() => DashboardStatsService.getSalesByGame(videogameSeeder));
+const salesChartData = computed(() => VideogameService.getSalesByGame(videogameSeeder));
 
-const genreChartData = computed(() => DashboardStatsService.getVideogamesByGenre(videogameSeeder));
+const genreChartData = computed(() => VideogameService.getVideogamesByGenre(videogameSeeder));
 
-const studioCountryChartData = computed(() =>
-  DashboardStatsService.getStudiosByCountry(studioSeeder),
-);
+const studioCountryChartData = computed(() => StudioService.getStudiosByCountry(studioSeeder));
 
-const ratingChartData = computed(() => DashboardStatsService.getRatingDistribution(reviewSeeder));
+const ratingChartData = computed(() => ReviewService.getRatingDistribution(reviewSeeder));
 
-const releaseYearChartData = computed(() =>
-  DashboardStatsService.getGamesByReleaseYear(videogameSeeder),
-);
+const releaseYearChartData = computed(() => VideogameService.getGamesByReleaseYear(videogameSeeder));
 
-const totalReviews = computed(() => DashboardStatsService.getTotalReviews(reviewSeeder));
+const totalReviews = computed(() => ReviewService.getTotalReviews(reviewSeeder));
 
-const totalUsers = computed(() => DashboardStatsService.getTotalUsers(userSeeder));
+const totalUsers = computed(() => UserService.getTotalUsers(userSeeder));
 
-const adminUsers = computed(() => DashboardStatsService.getAdminUsers(userSeeder));
+const adminUsers = computed(() => UserService.getAdminUsers(userSeeder));
 </script>
 
 <template>
