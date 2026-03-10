@@ -11,32 +11,26 @@ import BarChart from '@/components/BarChart.vue';
 import DoughnutChart from '@/components/DoughnutChart.vue';
 import StatCard from '@/components/StatCard.vue';
 import { ReviewService } from '@/services/ReviewService';
-import StudioService from '@/services/StudioService';
-import UserService from '@/services/UserService';
-import VideogameService from '@/services/VideogameService';
-import { reviewSeeder } from '@/stores/reviewseeder';
-import { studioSeeder } from '@/stores/studioseeder';
-import { userSeeder } from '@/stores/userseeder';
-import { videogameSeeder } from '@/stores/videogameseeder';
+import { StudioService } from '@/services/StudioService';
+import { UserService } from '@/services/UserService';
+import { VideogameService } from '@/services/VideogameService';
 
 // Selectors
-const salesChartData = computed(() => VideogameService.getSalesByGame(videogameSeeder));
+const salesChartData = computed(() => VideogameService.getSalesByGame());
 
-const genreChartData = computed(() => VideogameService.getVideogamesByGenre(videogameSeeder));
+const genreChartData = computed(() => VideogameService.getVideogamesByGenre());
 
-const studioCountryChartData = computed(() => StudioService.getStudiosByCountry(studioSeeder));
+const studioCountryChartData = computed(() => StudioService.getStudiosByCountry());
 
-const ratingChartData = computed(() => ReviewService.getRatingDistribution(reviewSeeder));
+const ratingChartData = computed(() => ReviewService.getRatingDistribution());
 
-const releaseYearChartData = computed(() =>
-  VideogameService.getGamesByReleaseYear(videogameSeeder),
-);
+const releaseYearChartData = computed(() => VideogameService.getGamesByReleaseYear());
 
-const totalReviews = computed(() => ReviewService.getTotalReviews(reviewSeeder));
+const totalReviews = computed(() => ReviewService.getTotalReviews());
 
-const totalUsers = computed(() => UserService.getTotalUsers(userSeeder));
+const totalUsers = computed(() => UserService.getTotalUsers());
 
-const adminUsers = computed(() => UserService.getAdminUsers(userSeeder));
+const adminUsers = computed(() => UserService.getAdminUsers());
 </script>
 
 <template>
