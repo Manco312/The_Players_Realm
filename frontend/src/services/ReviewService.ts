@@ -8,8 +8,8 @@ export class ReviewService {
     return useReviewStore().reviews;
   }
 
-  static getReviewsByBookId(bookId: number): ReviewInterface[] {
-    return useReviewStore().reviews.filter((review) => review.bookId === bookId);
+  static getReviewsByVideogameId(videogameId: number): ReviewInterface[] {
+    return useReviewStore().reviews.filter((review) => review.videogameId === videogameId);
   }
 
   static createReview(review: Omit<ReviewInterface, 'id'>): void {
@@ -19,7 +19,6 @@ export class ReviewService {
     store.reviews.push({
       id: nextId,
       ...review,
-      createdAt: new Date().toISOString(),
     });
   }
 
