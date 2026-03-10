@@ -21,7 +21,7 @@ const handleLogin = () => {
     return;
   }
 
-  router.push('/');
+  router.push('/home');
 };
 </script>
 
