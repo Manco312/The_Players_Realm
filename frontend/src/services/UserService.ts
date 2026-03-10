@@ -2,16 +2,18 @@
 
 // Internal Imports
 import type { UserInterface } from '@/interfaces/UserInterface';
+import { useUserStore } from '@/stores/userstore';
 
-function getTotalUsers(users: UserInterface[]): number {
-  return users.length;
+export class UserService {
+  static getUsers(): UserInterface[] {
+    return useUserStore().users;
+  }
+
+  static getTotalUsers(): number {
+    return useUserStore().users.length;
+  }
+
+  static getAdminUsers(): UserInterface[] {
+    return useUserStore().users.filter((user) => user.role === 'Admin');
+  }
 }
-
-function getAdminUsers(users: UserInterface[]): UserInterface[] {
-  return users.filter((user) => user.role === 'Admin');
-}
-
-export default {
-  getTotalUsers,
-  getAdminUsers,
-};
