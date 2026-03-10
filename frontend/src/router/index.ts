@@ -1,5 +1,7 @@
 // Made by: Santiago Manco
 import { createRouter, createWebHistory } from 'vue-router';
+
+import HomeView from '@/views/HomeView.vue';
 import LandingView from '@/views/LandingView.vue';
 import LoginView from '@/views/LoginView.vue';
 
@@ -17,6 +19,12 @@ const router = createRouter({
       name: 'login',
       component: LoginView,
       meta: { title: 'Login', layout: 'landing' },
+    },
+    {
+      path: '/home',
+      name: 'home',
+      component: HomeView,
+      meta: { title: 'Home' },
     },
   ],
 });
