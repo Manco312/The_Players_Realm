@@ -30,6 +30,25 @@ export class VideogameService {
     return useVideogameStore().videogames.length;
   }
 
+  static getOnlineVsOffline(): ChartData {
+    const videogames = useVideogameStore().videogames;
+    const onlineCount = videogames.filter((game) => game.online).length;
+    const offlineCount = videogames.filter((game) => !game.online).length;
+
+    return {
+      labels: ['Online', 'Offline'],
+      datasets: [
+        {
+          label: 'Online vs Offline',
+          data: [onlineCount, offlineCount],
+          backgroundColor: ['#5CE1E6', '#C16E70'],
+          borderColor: '#030027',
+          borderWidth: 2,
+        },
+      ],
+    };
+  }
+
   static getVideogamesByGenre(): ChartData {
     const videogames = useVideogameStore().videogames;
     const genreCounts: Record<string, number> = {};

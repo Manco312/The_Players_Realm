@@ -5,6 +5,7 @@ import { computed, ref } from 'vue';
 
 // Internal Imports
 import BarChart from '@/components/BarChart.vue';
+import DoughnutChart from '@/components/DoughnutChart.vue';
 import SelectInput from '@/components/SelectInput.vue';
 import StatCard from '@/components/StatCard.vue';
 import { StudioService } from '@/services/StudioService';
@@ -49,6 +50,12 @@ const studioOptions = computed(() =>
 
 const salesChartData = computed(() => VideogameService.getSalesByGame());
 
+const genreChartData = computed(() => VideogameService.getVideogamesByGenre());
+
+const releaseYearChartData = computed(() => VideogameService.getGamesByReleaseYear());
+
+const onlineVsOfflineChartData = computed(() => VideogameService.getOnlineVsOffline());
+
 const totalVideogames = computed(() => VideogameService.getTotalVideogames());
 
 // Functions
@@ -85,10 +92,21 @@ function handleCreate(): void {
     <h1 class="text-center text-3xl font-bold text-[#F2F3D9]">Videogames List</h1>
 
     <!-- Header Section -->
-    <div class="flex items-start justify-between gap-6">
-      <!-- Chart -->
-      <div class="w-64">
-        <BarChart :data="salesChartData" title="Top Sales" />
+    <div class="flex flex-wrap items-start justify-between gap-6">
+      <!-- Charts Row -->
+      <div class="flex flex-wrap gap-4">
+        <div class="w-56">
+          <BarChart :data="salesChartData" title="Top Sales" />
+        </div>
+        <div class="w-56">
+          <BarChart :data="releaseYearChartData" title="By Release Year" />
+        </div>
+        <div class="w-44">
+          <DoughnutChart :data="genreChartData" title="By Genre" />
+        </div>
+        <div class="w-44">
+          <DoughnutChart :data="onlineVsOfflineChartData" title="Online vs Offline" />
+        </div>
       </div>
 
       <!-- Stats and Create Button -->
