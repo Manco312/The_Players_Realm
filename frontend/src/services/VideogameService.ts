@@ -9,6 +9,27 @@ export class VideogameService {
     return useVideogameStore().videogames;
   }
 
+  static getVideogameById(id: number) {
+    return useVideogameStore().videogames.find((game) => game.id === id);
+  }
+
+  static deleteVideogame(id: number) {
+    const store = useVideogameStore();
+    const index = store.videogames.findIndex((game) => game.id === id);
+    if (index !== -1) {
+      store.videogames.splice(index, 1);
+    }
+  }
+
+  static getUniqueGenres(): string[] {
+    const videogames = useVideogameStore().videogames;
+    return [...new Set(videogames.map((game) => game.genre))];
+  }
+
+  static getTotalVideogames(): number {
+    return useVideogameStore().videogames.length;
+  }
+
   static getVideogamesByGenre(): ChartData {
     const videogames = useVideogameStore().videogames;
     const genreCounts: Record<string, number> = {};
