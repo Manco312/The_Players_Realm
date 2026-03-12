@@ -95,16 +95,16 @@ function handleCreate(): void {
     <div class="flex flex-wrap items-start justify-between gap-6">
       <!-- Charts Row -->
       <div class="flex flex-wrap gap-4">
-        <div class="w-56">
+        <div class="w-72">
           <BarChart :data="salesChartData" title="Top Sales" />
         </div>
-        <div class="w-56">
+        <div class="w-72">
           <BarChart :data="releaseYearChartData" title="By Release Year" />
         </div>
-        <div class="w-44">
+        <div class="w-64">
           <DoughnutChart :data="genreChartData" title="By Genre" />
         </div>
-        <div class="w-44">
+        <div class="w-64">
           <DoughnutChart :data="onlineVsOfflineChartData" title="Online vs Offline" />
         </div>
       </div>
