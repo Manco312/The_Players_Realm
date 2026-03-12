@@ -9,6 +9,10 @@ export class StudioService {
     return useStudioStore().studios;
   }
 
+  static getStudioById(id: number) {
+    return useStudioStore().studios.find((studio) => studio.id === id);
+  }
+
   static getStudiosByCountry(): ChartData {
     const studios = useStudioStore().studios;
     const countryCounts: Record<string, number> = {};

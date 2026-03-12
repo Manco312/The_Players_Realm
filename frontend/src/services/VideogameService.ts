@@ -9,6 +9,46 @@ export class VideogameService {
     return useVideogameStore().videogames;
   }
 
+  static getVideogameById(id: number) {
+    return useVideogameStore().videogames.find((game) => game.id === id);
+  }
+
+  static deleteVideogame(id: number) {
+    const store = useVideogameStore();
+    const index = store.videogames.findIndex((game) => game.id === id);
+    if (index !== -1) {
+      store.videogames.splice(index, 1);
+    }
+  }
+
+  static getUniqueGenres(): string[] {
+    const videogames = useVideogameStore().videogames;
+    return [...new Set(videogames.map((game) => game.genre))];
+  }
+
+  static getTotalVideogames(): number {
+    return useVideogameStore().videogames.length;
+  }
+
+  static getOnlineVsOffline(): ChartData {
+    const videogames = useVideogameStore().videogames;
+    const onlineCount = videogames.filter((game) => game.online).length;
+    const offlineCount = videogames.filter((game) => !game.online).length;
+
+    return {
+      labels: ['Online', 'Offline'],
+      datasets: [
+        {
+          label: 'Online vs Offline',
+          data: [onlineCount, offlineCount],
+          backgroundColor: ['#5CE1E6', '#C16E70'],
+          borderColor: '#030027',
+          borderWidth: 2,
+        },
+      ],
+    };
+  }
+
   static getVideogamesByGenre(): ChartData {
     const videogames = useVideogameStore().videogames;
     const genreCounts: Record<string, number> = {};

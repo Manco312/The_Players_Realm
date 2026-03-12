@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
 import LandingView from '@/views/LandingView.vue';
 import LoginView from '@/views/LoginView.vue';
+import VideogamesListView from '@/views/VideogamesListView.vue';
 import { useAuthStore } from '@/stores/authstore';
 
 const router = createRouter({
@@ -26,6 +27,12 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
       meta: { title: 'Home', requiresAuth: true },
+    },
+    {
+      path: '/videogames',
+      name: 'videogames',
+      component: VideogamesListView,
+      meta: { title: 'Videogames List', requiresAuth: true },
     },
   ],
 });
