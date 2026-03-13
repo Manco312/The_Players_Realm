@@ -2,6 +2,7 @@
 <script setup lang="ts">
 // External Imports
 import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 // Internal Imports
 import BarChart from '@/components/BarChart.vue';
@@ -13,6 +14,7 @@ import { VideogameService } from '@/services/VideogameService';
 import { useAuthStore } from '@/stores/authstore';
 
 // Variables
+const router = useRouter();
 const authStore = useAuthStore();
 const genreFilter = ref('');
 const studioFilter = ref('');
@@ -69,21 +71,6 @@ function handleDelete(id: number): void {
     VideogameService.deleteVideogame(id);
   }
 }
-
-function handleEdit(id: number): void {
-  // TODO: Navigate to edit page
-  console.log('Edit videogame:', id);
-}
-
-function handleViewDetail(id: number): void {
-  // TODO: Navigate to detail page
-  console.log('View detail:', id);
-}
-
-function handleCreate(): void {
-  // TODO: Navigate to create page
-  console.log('Create videogame');
-}
 </script>
 
 <template>
@@ -95,10 +82,10 @@ function handleCreate(): void {
     <div class="flex flex-wrap items-start justify-between gap-6">
       <!-- Charts Row -->
       <div class="flex flex-wrap gap-4">
-        <div class="w-60">
+        <div class="w-72">
           <BarChart :chartData="salesChartData" title="Top Sales" />
         </div>
-        <div class="w-60">
+        <div class="w-72">
           <BarChart :chartData="releaseYearChartData" title="By Release Year" />
         </div>
         <div class="w-64">
@@ -107,15 +94,15 @@ function handleCreate(): void {
         <div class="w-64">
           <DoughnutChart :chartData="onlineVsOfflineChartData" title="Online vs Offline" />
         </div>
-        <StatCard :value="totalVideogames" label="Registered games" />
       </div>
 
       <!-- Stats and Create Button -->
       <div class="flex flex-col items-end gap-4">
+        <StatCard :value="totalVideogames" label="Registered games" />
         <button
           v-if="isAdmin"
           class="rounded-md bg-[#5CE1E6] px-4 py-2 font-semibold text-[#030027] transition hover:bg-[#4BC8CD]"
-          @click="handleCreate"
+          @click="router.push('/videogames/create')"
         >
           + Add Videogame
         </button>
@@ -196,7 +183,7 @@ function handleCreate(): void {
                   v-if="isAdmin"
                   class="rounded p-1 text-[#5CE1E6] transition hover:bg-[#5CE1E6]/20"
                   title="Edit"
-                  @click="handleEdit(game.id)"
+                  @click="router.push(`/videogames/edit/${game.id}`)"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -218,7 +205,7 @@ function handleCreate(): void {
                 <button
                   class="rounded p-1 text-[#DC9E82] transition hover:bg-[#DC9E82]/20"
                   title="View Detail"
-                  @click="handleViewDetail(game.id)"
+                  @click="router.push(`/videogames/${game.id}`)"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
