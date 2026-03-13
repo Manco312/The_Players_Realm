@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
 import LandingView from '@/views/LandingView.vue';
 import LoginView from '@/views/LoginView.vue';
+import VideogameDetailView from '@/views/VideogameDetailView.vue';
 import VideogameFormView from '@/views/VideogameFormView.vue';
 import VideogamesListView from '@/views/VideogamesListView.vue';
 import { useAuthStore } from '@/stores/authstore';
@@ -34,6 +35,12 @@ const router = createRouter({
       name: 'videogames',
       component: VideogamesListView,
       meta: { title: 'Videogames List', requiresAuth: true },
+    },
+    {
+      path: '/videogames/:id',
+      name: 'videogames-detail',
+      component: VideogameDetailView,
+      meta: { title: 'Videogame Detail', requiresAuth: true },
     },
     {
       path: '/videogames/create',
