@@ -2,6 +2,8 @@
 
 // Internal Imports
 import type { ChartData } from '@/types/ChartTypes';
+import type { CreateVideogameDTO } from '@/dtos/CreateVideogameDTO';
+import type { VideogameInterface } from '@/interfaces/VideogameInterface';
 import { useVideogameStore } from '@/stores/videogamestore';
 
 export class VideogameService {
@@ -13,7 +15,26 @@ export class VideogameService {
     return useVideogameStore().videogames.find((game) => game.id === id);
   }
 
-  static deleteVideogame(id: number) {
+  static createVideogame(videogame: CreateVideogameDTO): void {
+    const store = useVideogameStore();
+    const nextId =
+      store.videogames.length > 0 ? Math.max(...store.videogames.map((g) => g.id)) + 1 : 1;
+
+    store.videogames.push({
+      id: nextId,
+      ...videogame,
+    });
+  }
+
+  static updateVideogame(id: number, videogame: Partial<VideogameInterface>): void {
+    const store = useVideogameStore();
+    const index = store.videogames.findIndex((game) => game.id === id);
+    if (index !== -1) {
+      store.videogames[index] = { ...store.videogames[index], ...videogame };
+    }
+  }
+
+  static deleteVideogame(id: number): void {
     const store = useVideogameStore();
     const index = store.videogames.findIndex((game) => game.id === id);
     if (index !== -1) {
