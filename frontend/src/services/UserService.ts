@@ -9,6 +9,10 @@ export class UserService {
     return useUserStore().users;
   }
 
+  static getUserById(id: number): UserInterface | undefined {
+    return useUserStore().users.find((user) => user.id === id);
+  }
+
   static getTotalUsers(): number {
     return useUserStore().users.length;
   }
