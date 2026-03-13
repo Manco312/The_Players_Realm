@@ -2,6 +2,7 @@
 <script setup lang="ts">
 // External Imports
 import { computed, ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 // Internal Imports
 import BarChart from '@/components/BarChart.vue';
@@ -13,6 +14,7 @@ import { VideogameService } from '@/services/VideogameService';
 import { useAuthStore } from '@/stores/authstore';
 
 // Variables
+const router = useRouter();
 const authStore = useAuthStore();
 const genreFilter = ref('');
 const studioFilter = ref('');
@@ -71,18 +73,15 @@ function handleDelete(id: number): void {
 }
 
 function handleEdit(id: number): void {
-  // TODO: Navigate to edit page
-  console.log('Edit videogame:', id);
+  router.push(`/videogames/edit/${id}`);
 }
 
 function handleViewDetail(id: number): void {
-  // TODO: Navigate to detail page
-  console.log('View detail:', id);
+  router.push(`/videogames/${id}`);
 }
 
 function handleCreate(): void {
-  // TODO: Navigate to create page
-  console.log('Create videogame');
+  router.push('/videogames/create');
 }
 </script>
 
