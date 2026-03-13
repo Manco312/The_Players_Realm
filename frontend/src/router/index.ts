@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
 import LandingView from '@/views/LandingView.vue';
 import LoginView from '@/views/LoginView.vue';
+import VideogameFormView from '@/views/VideogameFormView.vue';
 import VideogamesListView from '@/views/VideogamesListView.vue';
 import { useAuthStore } from '@/stores/authstore';
 
@@ -34,6 +35,18 @@ const router = createRouter({
       component: VideogamesListView,
       meta: { title: 'Videogames List', requiresAuth: true },
     },
+    {
+      path: '/videogames/create',
+      name: 'videogames-create',
+      component: VideogameFormView,
+      meta: { title: 'Create Videogame', requiresAuth: true, requiresAdmin: true },
+    },
+    {
+      path: '/videogames/edit/:id',
+      name: 'videogames-edit',
+      component: VideogameFormView,
+      meta: { title: 'Edit Videogame', requiresAuth: true, requiresAdmin: true },
+    },
   ],
 });
 
@@ -44,6 +57,9 @@ router.beforeEach((to, _from, next) => {
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     // Redirect to login if not authenticated
     next({ name: 'login' });
+  } else if (to.meta.requiresAdmin && authStore.currentUser?.role !== 'Admin') {
+    // Redirect to home if not admin
+    next({ name: 'home' });
   } else {
     next();
   }
