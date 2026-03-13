@@ -13,6 +13,23 @@ export class StudioService {
     return useStudioStore().studios.find((studio) => studio.id === id);
   }
 
+  static getTotalStudios(): number {
+    return useStudioStore().studios.length;
+  }
+
+  static getUniqueCountries(): string[] {
+    const studios = useStudioStore().studios;
+    return [...new Set(studios.map((studio) => studio.country))];
+  }
+
+  static deleteStudio(id: number): void {
+    const store = useStudioStore();
+    const index = store.studios.findIndex((studio) => studio.id === id);
+    if (index !== -1) {
+      store.studios.splice(index, 1);
+    }
+  }
+
   static getStudiosByCountry(): ChartData {
     const studios = useStudioStore().studios;
     const countryCounts: Record<string, number> = {};
