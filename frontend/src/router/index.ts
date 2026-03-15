@@ -4,6 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/views/HomeView.vue';
 import LandingView from '@/views/LandingView.vue';
 import LoginView from '@/views/LoginView.vue';
+import StudiosListView from '@/views/StudiosListView.vue';
 import VideogameDetailView from '@/views/VideogameDetailView.vue';
 import VideogameFormView from '@/views/VideogameFormView.vue';
 import VideogamesListView from '@/views/VideogamesListView.vue';
@@ -53,6 +54,12 @@ const router = createRouter({
       name: 'videogames-edit',
       component: VideogameFormView,
       meta: { title: 'Edit Videogame', requiresAuth: true, requiresAdmin: true },
+    },
+    {
+      path: '/studios',
+      name: 'studios',
+      component: StudiosListView,
+      meta: { title: 'Studios List', requiresAuth: true },
     },
   ],
 });
