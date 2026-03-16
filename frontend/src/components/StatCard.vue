@@ -13,7 +13,6 @@ defineProps<{
   <div
     class="flex flex-col items-center justify-center rounded-lg bg-[#F2F3D9] p-6 text-center shadow-sm"
   >
-    <!-- Clock Icon -->
     <svg
       v-if="icon === 'clock'"
       xmlns="http://www.w3.org/2000/svg"
@@ -27,7 +26,6 @@ defineProps<{
       <polyline points="12 6 12 12 16 14" />
     </svg>
 
-    <!-- Users Icon -->
     <svg
       v-if="icon === 'users'"
       xmlns="http://www.w3.org/2000/svg"

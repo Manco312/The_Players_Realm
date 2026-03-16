@@ -1,9 +1,14 @@
 <script setup lang="ts">
 // Made by: Santiago Manco
+
+// External Imports
 import { ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
+
+// Internal Imports
 import { useAuthStore } from '@/stores/authstore.js';
 
+// Variables
 const email = ref('');
 const password = ref('');
 const errorMessage = ref('');
@@ -11,6 +16,7 @@ const errorMessage = ref('');
 const router = useRouter();
 const authStore = useAuthStore();
 
+// Functions
 const handleLogin = () => {
   errorMessage.value = '';
 

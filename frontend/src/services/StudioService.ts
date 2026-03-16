@@ -3,6 +3,8 @@
 import type { ChartData } from '@/types/ChartTypes';
 import { useStudioStore } from '@/stores/studiostore';
 import { COUNTRY_CODE_MAP } from '@/constants/countryCodeMap';
+import type { CreateStudioDTO } from '@/dtos/CreateStudioDTO';
+import type { StudioInterface } from '@/interfaces/StudioInterface';
 
 export class StudioService {
   static getStudios() {

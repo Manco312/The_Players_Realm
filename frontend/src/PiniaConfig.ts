@@ -2,10 +2,10 @@
 import { createPinia } from 'pinia';
 import { watch } from 'vue';
 
-import { userSeeder } from '@/stores/userseeder.js';
-import { studioSeeder } from '@/stores/studioseeder.js';
-import { videogameSeeder } from '@/stores/videogameseeder.js';
-import { reviewSeeder } from '@/stores/reviewseeder.js';
+import { userSeeder } from '@/seeders/userseeder.js';
+import { studioSeeder } from '@/seeders/studioseeder.js';
+import { videogameSeeder } from '@/seeders/videogameseeder.js';
+import { reviewSeeder } from '@/seeders/reviewseeder.js';
 
 export default class PiniaConfig {
   public static init() {

@@ -1,20 +1,18 @@
 <script setup lang="ts">
 // Made by: Luciana Hoyos
 
+// External Imports
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { computed, onMounted, ref, watch } from 'vue';
 
+// Internal Imports
 import StatCard from '@/components/StatCard.vue';
-import { COUNTRY_CODE_MAP } from '@/constants/countryCodeMap';
 import { StudioService } from '@/services/StudioService';
 import { useStudioStore } from '@/stores/studiostore';
+import { createOnEachFeature, createStyleFunction } from '@/utils/MapUtils';
 
-type CountryFeatureProperties = {
-  name?: string;
-  'ISO3166-1-Alpha-3'?: string;
-};
-
+// Variables
 const studioStore = useStudioStore();
 
 const mapContainer = ref<HTMLElement | null>(null);
@@ -22,111 +20,13 @@ const mapInstance = ref<L.Map | null>(null);
 const geoJsonLayer = ref<L.GeoJSON | null>(null);
 const geoJsonData = ref<GeoJSON.FeatureCollection | null>(null);
 
+// Selectors
 const studioCountByCountry = computed(() => StudioService.getStudioCountByCountry());
 const countriesWithStudios = computed(() => StudioService.getCountriesWithStudiosCount());
 const countryWithMost = computed(() => StudioService.getCountryWithMostStudios());
 const countryWithLeast = computed(() => StudioService.getCountryWithLeastStudios());
 
-function getColor(studioCount: number, maxCount: number): string {
-  if (studioCount === 0) return '#E0E0E0';
-
-  const ratio = studioCount / maxCount;
-
-  if (ratio >= 0.8) return '#C16E70';
-  if (ratio >= 0.6) return '#E07A3D';
-  if (ratio >= 0.4) return '#F4A940';
-  if (ratio >= 0.2) return '#F7DC6F';
-  return '#82E0AA';
-}
-
-function getStudioCountForFeature(
-  feature: GeoJSON.Feature,
-  studioData: Record<string, number>,
-): number {
-  const props = (feature.properties ?? {}) as CountryFeatureProperties;
-
-  const countryCode = props['ISO3166-1-Alpha-3'];
-  const countryName = props.name;
-
-  if (!countryCode) {
-    return 0;
-  }
-
-  if (studioData[countryCode] !== undefined) {
-    return studioData[countryCode];
-  }
-
-  if (countryName && studioData[countryName] !== undefined) {
-    return studioData[countryName];
-  }
-
-  for (const [storedCountry, count] of Object.entries(studioData)) {
-    if (COUNTRY_CODE_MAP[storedCountry] === countryCode) {
-      return count;
-    }
-  }
-
-  return 0;
-}
-
-function createStyleFunction(
-  studioData: Record<string, number>,
-): (feature?: GeoJSON.Feature) => L.PathOptions {
-  const counts = Object.values(studioData);
-  const maxCount = counts.length > 0 ? Math.max(...counts) : 1;
-
-  return (feature?: GeoJSON.Feature): L.PathOptions => {
-    if (!feature) return {};
-
-    const studioCount = getStudioCountForFeature(feature, studioData);
-
-    return {
-      fillColor: getColor(studioCount, maxCount),
-      weight: 1,
-      opacity: 1,
-      color: '#030027',
-      fillOpacity: 0.8,
-    };
-  };
-}
-
-function createOnEachFeature(
-  studioData: Record<string, number>,
-): (feature: GeoJSON.Feature, layer: L.Layer) => void {
-  return (feature: GeoJSON.Feature, layer: L.Layer): void => {
-    const props = (feature.properties ?? {}) as CountryFeatureProperties;
-    const countryName = props.name || 'Unknown';
-    const studioCount = getStudioCountForFeature(feature, studioData);
-
-    const popupContent = `
-      <div class="p-2">
-        <strong>${countryName}</strong><br/>
-        Studios: ${studioCount}
-      </div>
-    `;
-
-    layer.bindPopup(popupContent);
-
-    layer.on({
-      mouseover: (e: L.LeafletMouseEvent) => {
-        const target = e.target as L.Path;
-        target.setStyle({
-          weight: 3,
-          color: '#F2F3D9',
-          fillOpacity: 1,
-        });
-
-        target.bringToFront();
-      },
-      mouseout: () => {
-        if (geoJsonLayer.value) {
-          geoJsonLayer.value.resetStyle(layer as L.Path);
-        }
-      },
-    });
-  };
-}
-
+// Functions
 async function loadGeoJson(): Promise<void> {
   try {
     const response = await fetch(
@@ -157,7 +57,7 @@ function updateMap(): void {
 
   geoJsonLayer.value = L.geoJSON(geoJsonData.value, {
     style: createStyleFunction(studioData),
-    onEachFeature: createOnEachFeature(studioData),
+    onEachFeature: createOnEachFeature(studioData, geoJsonLayer),
   }).addTo(mapInstance.value);
 }
 
@@ -183,6 +83,8 @@ function initMap(): void {
 onMounted(() => {
   initMap();
 });
+
+// Watchers
 
 watch(
   () => studioStore.studios,
