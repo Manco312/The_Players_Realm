@@ -144,6 +144,10 @@ async function loadGeoJson(): Promise<void> {
 }
 
 function updateMap(): void {
+  console.log('[v0] updateMap called');
+  console.log('[v0] studioStore.studios:', studioStore.studios);
+  console.log('[v0] studioCountByCountry.value:', studioCountByCountry.value);
+  
   if (!mapInstance.value || !geoJsonData.value) return;
 
   if (geoJsonLayer.value) {
