@@ -47,16 +47,15 @@ function getMaxStudioCount(): number {
 }
 
 function getStudioCountForFeature(feature: GeoJSON.Feature): number {
-  const countryCode = feature.properties?.ISO_A3 || feature.properties?.iso_a3;
-  const countryAdmin = feature.properties?.ADMIN;
+  const props = feature.properties;
+  const countryCode = props?.ISO_A3 || props?.iso_a3;
+  const countryAdmin = props?.ADMIN || props?.admin || props?.name || props?.NAME;
   const studioData = studioCountByCountry.value;
 
-  // Debug for Poland
-  if (countryAdmin === 'Poland') {
-    console.log('[v0] Poland feature:', { countryCode, countryAdmin });
-    console.log('[v0] Studio data:', studioData);
-    console.log('[v0] Poland in data?', studioData['Poland']);
-    console.log('[v0] COUNTRY_CODE_MAP Poland:', COUNTRY_CODE_MAP['Poland']);
+  // Debug - log feature properties for first few and for countries we have
+  const ourCountries = ['Poland', 'USA', 'Japan', 'Russia'];
+  if (ourCountries.some(c => JSON.stringify(props).includes(c))) {
+    console.log('[v0] Found country feature:', props);
   }
 
   // Skip invalid country codes (GeoJSON uses -99 for territories without ISO code)
