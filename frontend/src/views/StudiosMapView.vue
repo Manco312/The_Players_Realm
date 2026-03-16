@@ -2,9 +2,9 @@
 // Made by: Santiago Manco
 
 // External Imports
-import { computed, onMounted, ref, watch } from 'vue';
-import L from 'leaflet';
+import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { computed, onMounted, ref, watch } from 'vue';
 
 // Internal Imports
 import StatCard from '@/components/StatCard.vue';
