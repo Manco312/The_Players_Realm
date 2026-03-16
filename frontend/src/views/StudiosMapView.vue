@@ -51,6 +51,14 @@ function getStudioCountForFeature(feature: GeoJSON.Feature): number {
   const countryAdmin = feature.properties?.ADMIN;
   const studioData = studioCountByCountry.value;
 
+  // Debug for Poland
+  if (countryAdmin === 'Poland') {
+    console.log('[v0] Poland feature:', { countryCode, countryAdmin });
+    console.log('[v0] Studio data:', studioData);
+    console.log('[v0] Poland in data?', studioData['Poland']);
+    console.log('[v0] COUNTRY_CODE_MAP Poland:', COUNTRY_CODE_MAP['Poland']);
+  }
+
   // Skip invalid country codes (GeoJSON uses -99 for territories without ISO code)
   if (!countryCode || countryCode === '-99') {
     return 0;
