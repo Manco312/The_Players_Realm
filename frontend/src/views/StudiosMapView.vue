@@ -19,34 +19,14 @@ const mapInstance = ref<L.Map | null>(null);
 const geoJsonLayer = ref<L.GeoJSON | null>(null);
 const geoJsonData = ref<GeoJSON.FeatureCollection | null>(null);
 
-// Selectors
-const studioCountByCountry = computed(() => {
-  const countryCounts: Record<string, number> = {};
-  studioStore.studios.forEach((studio) => {
-    countryCounts[studio.country] = (countryCounts[studio.country] || 0) + 1;
-  });
-  return countryCounts;
-});
+// Selectors - use StudioService methods
+const studioCountByCountry = computed(() => StudioService.getStudioCountByCountry());
 
-const countriesWithStudios = computed(() => Object.keys(studioCountByCountry.value).length);
+const countriesWithStudios = computed(() => StudioService.getCountriesWithStudiosCount());
 
-const countryWithMost = computed(() => {
-  const entries = Object.entries(studioCountByCountry.value);
-  if (entries.length === 0) return null;
-  const [country, count] = entries.reduce((max, current) =>
-    current[1] > max[1] ? current : max,
-  );
-  return { country, count };
-});
+const countryWithMost = computed(() => StudioService.getCountryWithMostStudios());
 
-const countryWithLeast = computed(() => {
-  const entries = Object.entries(studioCountByCountry.value);
-  if (entries.length === 0) return null;
-  const [country, count] = entries.reduce((min, current) =>
-    current[1] < min[1] ? current : min,
-  );
-  return { country, count };
-});
+const countryWithLeast = computed(() => StudioService.getCountryWithLeastStudios());
 
 // Functions
 function getColor(studioCount: number, maxCount: number): string {
@@ -145,6 +125,10 @@ async function loadGeoJson(): Promise<void> {
       'https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson',
     );
     geoJsonData.value = await response.json();
+
+    console.log('[v0] Studios in store:', studioStore.studios);
+    console.log('[v0] Studio count by country:', studioCountByCountry.value);
+
     updateMap();
   } catch (error) {
     console.error('Error loading GeoJSON:', error);
