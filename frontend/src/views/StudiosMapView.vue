@@ -41,16 +41,13 @@ function getColor(studioCount: number, maxCount: number): string {
   return '#82E0AA';
 }
 
-function getMaxStudioCount(): number {
-  const counts = Object.values(studioCountByCountry.value);
-  return counts.length > 0 ? Math.max(...counts) : 1;
-}
-
-function getStudioCountForFeature(feature: GeoJSON.Feature): number {
+function getStudioCountForFeature(
+  feature: GeoJSON.Feature,
+  studioData: Record<string, number>,
+): number {
   const props = feature.properties;
   const countryCode = props?.ISO_A3;
   const countryName = props?.name;
-  const studioData = studioCountByCountry.value;
 
   // Skip invalid country codes
   if (!countryCode || countryCode === '-99') {
@@ -77,50 +74,60 @@ function getStudioCountForFeature(feature: GeoJSON.Feature): number {
   return 0;
 }
 
-function styleFeature(feature: GeoJSON.Feature | undefined): L.PathOptions {
-  if (!feature) return {};
+function createStyleFunction(
+  studioData: Record<string, number>,
+): (feature: GeoJSON.Feature | undefined) => L.PathOptions {
+  const counts = Object.values(studioData);
+  const maxCount = counts.length > 0 ? Math.max(...counts) : 1;
 
-  const studioCount = getStudioCountForFeature(feature);
-  const maxCount = getMaxStudioCount();
+  return (feature: GeoJSON.Feature | undefined): L.PathOptions => {
+    if (!feature) return {};
 
-  return {
-    fillColor: getColor(studioCount, maxCount),
-    weight: 1,
-    opacity: 1,
-    color: '#030027',
-    fillOpacity: 0.8,
+    const studioCount = getStudioCountForFeature(feature, studioData);
+
+    return {
+      fillColor: getColor(studioCount, maxCount),
+      weight: 1,
+      opacity: 1,
+      color: '#030027',
+      fillOpacity: 0.8,
+    };
   };
 }
 
-function onEachFeature(feature: GeoJSON.Feature, layer: L.Layer): void {
-  const countryName = feature.properties?.ADMIN || feature.properties?.name || 'Unknown';
-  const studioCount = getStudioCountForFeature(feature);
+function createOnEachFeature(
+  studioData: Record<string, number>,
+): (feature: GeoJSON.Feature, layer: L.Layer) => void {
+  return (feature: GeoJSON.Feature, layer: L.Layer): void => {
+    const countryName = feature.properties?.ADMIN || feature.properties?.name || 'Unknown';
+    const studioCount = getStudioCountForFeature(feature, studioData);
 
-  const popupContent = `
-    <div class="p-2">
-      <strong>${countryName}</strong><br/>
-      Studios: ${studioCount}
-    </div>
-  `;
+    const popupContent = `
+      <div class="p-2">
+        <strong>${countryName}</strong><br/>
+        Studios: ${studioCount}
+      </div>
+    `;
 
-  layer.bindPopup(popupContent);
+    layer.bindPopup(popupContent);
 
-  layer.on({
-    mouseover: (e: L.LeafletMouseEvent) => {
-      const target = e.target as L.Path;
-      target.setStyle({
-        weight: 3,
-        color: '#F2F3D9',
-        fillOpacity: 1,
-      });
-      target.bringToFront();
-    },
-    mouseout: () => {
-      if (geoJsonLayer.value) {
-        geoJsonLayer.value.resetStyle(layer as L.Path);
-      }
-    },
-  });
+    layer.on({
+      mouseover: (e: L.LeafletMouseEvent) => {
+        const target = e.target as L.Path;
+        target.setStyle({
+          weight: 3,
+          color: '#F2F3D9',
+          fillOpacity: 1,
+        });
+        target.bringToFront();
+      },
+      mouseout: () => {
+        if (geoJsonLayer.value) {
+          geoJsonLayer.value.resetStyle(layer as L.Path);
+        }
+      },
+    });
+  };
 }
 
 async function loadGeoJson(): Promise<void> {
@@ -142,9 +149,12 @@ function updateMap(): void {
     mapInstance.value.removeLayer(geoJsonLayer.value);
   }
 
+  // Get current studio data and pass it to the style/feature functions
+  const studioData = studioCountByCountry.value;
+
   geoJsonLayer.value = L.geoJSON(geoJsonData.value, {
-    style: styleFeature,
-    onEachFeature: onEachFeature,
+    style: createStyleFunction(studioData),
+    onEachFeature: createOnEachFeature(studioData),
   }).addTo(mapInstance.value);
 }
 
