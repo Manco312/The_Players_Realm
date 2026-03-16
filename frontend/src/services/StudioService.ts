@@ -1,4 +1,4 @@
-// Made by: Santiago Manco
+// Made by: Santiago Manco and Luciana Hoyos
 
 // Internal Imports
 import type { ChartData } from '@/types/ChartTypes';
@@ -20,6 +20,24 @@ export class StudioService {
   static getUniqueCountries(): string[] {
     const studios = useStudioStore().studios;
     return [...new Set(studios.map((studio) => studio.country))];
+  }
+
+  static createStudio(studio: CreateStudioDTO): void {
+    const store = useStudioStore();
+    const nextId = store.studios.length > 0 ? Math.max(...store.studios.map((s) => s.id)) + 1 : 1;
+
+    store.studios.push({
+      id: nextId,
+      ...studio,
+    });
+  }
+
+  static updateStudio(id: number, studio: Partial<StudioInterface>): void {
+    const store = useStudioStore();
+    const index = store.studios.findIndex((s) => s.id === id);
+    if (index !== -1) {
+      store.studios[index] = { ...store.studios[index], ...studio };
+    }
   }
 
   static deleteStudio(id: number): void {

@@ -69,6 +69,13 @@ function handleDelete(id: number): void {
         >
           Check our Studios Map
         </button>
+        <button
+          v-if="isAdmin"
+          class="rounded-md bg-[#5CE1E6] px-4 py-2 font-semibold text-[#030027] transition hover:bg-[#3BC7CC]"
+          @click="router.push('/studios/create')"
+        >
+          Create Studio
+        </button>
       </div>
     </div>
 
