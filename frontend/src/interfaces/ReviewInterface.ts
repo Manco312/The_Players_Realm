@@ -2,7 +2,7 @@
 export interface ReviewInterface {
   id: number;
   comment: string;
-  rating: number;
+  rating: string;
   userId: number;
   videogameId: number;
 }

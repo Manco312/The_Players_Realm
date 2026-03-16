@@ -82,14 +82,19 @@ export class StudioService {
   static updateStudio(id: number, studio: Partial<StudioInterface>): void {
     const store = useStudioStore();
     const index = store.studios.findIndex((s) => s.id === id);
+
     if (index !== -1) {
-      store.studios[index] = { ...store.studios[index], ...studio };
+      store.studios[index] = {
+        ...store.studios[index],
+        ...studio,
+      } as StudioInterface;
     }
   }
 
   static deleteStudio(id: number): void {
     const store = useStudioStore();
     const index = store.studios.findIndex((studio) => studio.id === id);
+
     if (index !== -1) {
       store.studios.splice(index, 1);
     }

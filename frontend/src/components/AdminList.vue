@@ -14,7 +14,7 @@ const avatarColors = ['#5CE1E6', '#DC9E82', '#C16E70', '#151E3F', '#F2F3D9'];
 
 // Functions
 function getAvatarColor(index: number): string {
-  return avatarColors[index % avatarColors.length];
+  return avatarColors[index % avatarColors.length]!;
 }
 
 function getInitials(username: string): string {

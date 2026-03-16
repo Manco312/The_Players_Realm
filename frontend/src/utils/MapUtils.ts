@@ -1,7 +1,7 @@
 // Made by: Santiago Manco and Luciana Hoyos
 
 import * as L from 'leaflet';
-import type { Feature } from 'geojson';
+import type { ShallowRef } from 'vue';
 import { COUNTRY_CODE_MAP } from '@/constants/countryCodeMap';
 
 type CountryFeatureProperties = {
@@ -22,7 +22,7 @@ export function getColor(studioCount: number, maxCount: number): string {
 }
 
 export function getStudioCountForFeature(
-  feature: Feature,
+  feature: GeoJSON.Feature,
   studioData: Record<string, number>,
 ): number {
   const props = (feature.properties ?? {}) as CountryFeatureProperties;
@@ -30,9 +30,7 @@ export function getStudioCountForFeature(
   const countryCode = props['ISO3166-1-Alpha-3'];
   const countryName = props.name;
 
-  if (!countryCode) {
-    return 0;
-  }
+  if (!countryCode) return 0;
 
   if (studioData[countryCode] !== undefined) {
     return studioData[countryCode];
@@ -53,11 +51,11 @@ export function getStudioCountForFeature(
 
 export function createStyleFunction(
   studioData: Record<string, number>,
-): (feature?: Feature) => L.PathOptions {
+): (feature?: GeoJSON.Feature) => L.PathOptions {
   const counts = Object.values(studioData);
   const maxCount = counts.length > 0 ? Math.max(...counts) : 1;
 
-  return (feature?: Feature): L.PathOptions => {
+  return (feature?: GeoJSON.Feature): L.PathOptions => {
     if (!feature) return {};
 
     const studioCount = getStudioCountForFeature(feature, studioData);
@@ -74,9 +72,9 @@ export function createStyleFunction(
 
 export function createOnEachFeature(
   studioData: Record<string, number>,
-  geoJsonLayerRef: { value: L.GeoJSON | null },
-): (feature: Feature, layer: L.Layer) => void {
-  return (feature: Feature, layer: L.Layer): void => {
+  geoJsonLayerRef: ShallowRef<L.GeoJSON<any> | null>,
+): (feature: GeoJSON.Feature, layer: L.Layer) => void {
+  return (feature: GeoJSON.Feature, layer: L.Layer): void => {
     const props = (feature.properties ?? {}) as CountryFeatureProperties;
     const countryName = props.name || 'Unknown';
     const studioCount = getStudioCountForFeature(feature, studioData);

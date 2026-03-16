@@ -30,7 +30,10 @@ export class VideogameService {
     const store = useVideogameStore();
     const index = store.videogames.findIndex((game) => game.id === id);
     if (index !== -1) {
-      store.videogames[index] = { ...store.videogames[index], ...videogame };
+      store.videogames[index] = {
+        ...store.videogames[index],
+        ...videogame,
+      } as VideogameInterface;
     }
   }
 
@@ -125,7 +128,7 @@ export class VideogameService {
       datasets: [
         {
           label: 'Games by Release Year',
-          data: sortedYears.map((year) => yearCounts[Number(year)]),
+          data: sortedYears.map((year) => yearCounts[Number(year)] ?? 0),
           backgroundColor: '#5CE1E6',
           borderColor: '#030027',
           borderWidth: 1,

@@ -28,7 +28,7 @@ const authStore = useAuthStore();
 
 const form = ref<CreateReviewDTO>({
   videogameId: props.videogameId,
-  rating: 5,
+  rating: '5',
   comment: '',
   userId: authStore.currentUser?.id || 0,
 });
@@ -55,7 +55,7 @@ watch(
     if (isOpen) {
       form.value = {
         videogameId: props.videogameId,
-        rating: 5,
+        rating: '5',
         comment: '',
         userId: authStore.currentUser?.id || 0,
       };

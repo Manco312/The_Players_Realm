@@ -115,7 +115,7 @@ function renderStars(rating: number): string {
             class="rounded-lg bg-[#DC9E82] p-4"
           >
             <div class="mb-2 text-[#030027]">
-              <span class="text-amber-500">{{ renderStars(review.rating) }}</span>
+              <span class="text-amber-500">{{ renderStars(Number(review.rating)) }}</span>
             </div>
             <p class="text-sm text-[#030027]">{{ review.comment }}</p>
             <div class="mt-3 flex items-center gap-2">

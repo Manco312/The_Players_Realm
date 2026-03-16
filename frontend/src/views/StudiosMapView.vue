@@ -4,7 +4,7 @@
 // External Imports
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, shallowRef, watch } from 'vue';
 
 // Internal Imports
 import StatCard from '@/components/StatCard.vue';
@@ -16,8 +16,8 @@ import { createOnEachFeature, createStyleFunction } from '@/utils/MapUtils';
 const studioStore = useStudioStore();
 
 const mapContainer = ref<HTMLElement | null>(null);
-const mapInstance = ref<L.Map | null>(null);
-const geoJsonLayer = ref<L.GeoJSON | null>(null);
+const mapInstance = shallowRef<L.Map | null>(null);
+const geoJsonLayer = shallowRef<L.GeoJSON<any> | null>(null);
 const geoJsonData = ref<GeoJSON.FeatureCollection | null>(null);
 
 // Selectors
@@ -58,7 +58,7 @@ function updateMap(): void {
   geoJsonLayer.value = L.geoJSON(geoJsonData.value, {
     style: createStyleFunction(studioData),
     onEachFeature: createOnEachFeature(studioData, geoJsonLayer),
-  }).addTo(mapInstance.value);
+  }).addTo(mapInstance.value!);
 }
 
 function initMap(): void {
@@ -75,7 +75,7 @@ function initMap(): void {
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-  }).addTo(mapInstance.value);
+  }).addTo(mapInstance.value!);
 
   loadGeoJson();
 }
