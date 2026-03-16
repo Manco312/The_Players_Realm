@@ -2,6 +2,8 @@
 
 // Internal Imports
 import type { ChartData } from '@/types/ChartTypes';
+import type { CreateStudioDTO } from '@/dtos/CreateStudioDTO';
+import type { StudioInterface } from '@/interfaces/StudioInterface';
 import { useStudioStore } from '@/stores/studiostore';
 
 export class StudioService {
@@ -11,6 +13,41 @@ export class StudioService {
 
   static getStudioById(id: number) {
     return useStudioStore().studios.find((studio) => studio.id === id);
+  }
+
+  static createStudio(studio: CreateStudioDTO): void {
+    const store = useStudioStore();
+    const nextId = store.studios.length > 0 ? Math.max(...store.studios.map((s) => s.id)) + 1 : 1;
+
+    store.studios.push({
+      id: nextId,
+      ...studio,
+    });
+  }
+
+  static updateStudio(id: number, studio: Partial<StudioInterface>): void {
+    const store = useStudioStore();
+    const index = store.studios.findIndex((s) => s.id === id);
+    if (index !== -1) {
+      store.studios[index] = { ...store.studios[index], ...studio };
+    }
+  }
+
+  static deleteStudio(id: number): void {
+    const store = useStudioStore();
+    const index = store.studios.findIndex((s) => s.id === id);
+    if (index !== -1) {
+      store.studios.splice(index, 1);
+    }
+  }
+
+  static getUniqueCountries(): string[] {
+    const studios = useStudioStore().studios;
+    return [...new Set(studios.map((studio) => studio.country))];
+  }
+
+  static getTotalStudios(): number {
+    return useStudioStore().studios.length;
   }
 
   static getStudiosByCountry(): ChartData {
