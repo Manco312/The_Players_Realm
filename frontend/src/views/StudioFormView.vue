@@ -7,6 +7,7 @@ import { useRoute, useRouter } from 'vue-router';
 // Internal Imports
 import SelectInput from '@/components/SelectInput.vue';
 import TextInput from '@/components/TextInput.vue';
+import { COUNTRIES } from '@/constants/countries';
 import type { CreateStudioDTO } from '@/dtos/CreateStudioDTO';
 import { StudioService } from '@/services/StudioService';
 
@@ -27,8 +28,7 @@ const isSubmitting = ref(false);
 
 // Selectors
 const countryOptions = computed(() => {
-  const countries = StudioService.getUniqueCountries();
-  return countries.map((country) => ({
+  return COUNTRIES.map((country) => ({
     value: country,
     label: country,
   }));
