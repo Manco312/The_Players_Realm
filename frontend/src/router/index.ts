@@ -5,6 +5,7 @@ import HomeView from '@/views/HomeView.vue';
 import LandingView from '@/views/LandingView.vue';
 import LoginView from '@/views/LoginView.vue';
 import StudioFormView from '@/views/StudioFormView.vue';
+import StudiosMapView from '@/views/StudiosMapView.vue';
 import VideogameDetailView from '@/views/VideogameDetailView.vue';
 import VideogameFormView from '@/views/VideogameFormView.vue';
 import VideogamesListView from '@/views/VideogamesListView.vue';
@@ -66,6 +67,12 @@ const router = createRouter({
       name: 'studios-edit',
       component: StudioFormView,
       meta: { title: 'Edit Studio', requiresAuth: true, requiresAdmin: true },
+    },
+    {
+      path: '/studios/map',
+      name: 'studios-map',
+      component: StudiosMapView,
+      meta: { title: 'Studios Map', requiresAuth: true },
     },
   ],
 });
