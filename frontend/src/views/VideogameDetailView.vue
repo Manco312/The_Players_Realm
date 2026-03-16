@@ -52,7 +52,6 @@ function renderStars(rating: number): string {
 
 <template>
   <div class="space-y-6">
-    <!-- Not Found State -->
     <div v-if="!videogame" class="text-center text-[#F2F3D9]">
       <p class="text-lg">Videogame not found</p>
       <button
@@ -63,11 +62,8 @@ function renderStars(rating: number): string {
       </button>
     </div>
 
-    <!-- Videogame Detail -->
     <div v-else>
-      <!-- Game Info Section -->
       <div class="flex flex-wrap gap-8">
-        <!-- Game Image -->
         <div class="w-80 flex-shrink-0">
           <img
             :src="videogame.imageUrl || '/images/placeholder-game.png'"
@@ -76,7 +72,6 @@ function renderStars(rating: number): string {
           />
         </div>
 
-        <!-- Game Details -->
         <div class="flex-1 space-y-3">
           <h1 class="text-2xl font-bold text-[#F2F3D9]">{{ videogame.name }}</h1>
 
@@ -103,7 +98,6 @@ function renderStars(rating: number): string {
             <p><span class="font-medium">Director:</span> {{ videogame.director }}</p>
           </div>
 
-          <!-- Description Box -->
           <div class="mt-4 rounded-lg bg-[#DC9E82] p-4">
             <h3 class="mb-2 font-semibold text-[#C16E70]">Description</h3>
             <p class="text-sm text-[#030027]">{{ videogame.description }}</p>
@@ -111,11 +105,9 @@ function renderStars(rating: number): string {
         </div>
       </div>
 
-      <!-- Reviews Section -->
       <div class="mt-8">
         <h2 class="mb-4 text-lg font-bold text-[#F2F3D9]">Game Reviews:</h2>
 
-        <!-- Reviews List -->
         <div class="space-y-4">
           <div
             v-for="review in reviewsWithUsers"
@@ -138,14 +130,12 @@ function renderStars(rating: number): string {
             </div>
           </div>
 
-          <!-- Empty State -->
           <p v-if="reviews.length === 0" class="text-sm text-[#F2F3D9]/60">
             No reviews yet. Be the first to review!
           </p>
         </div>
       </div>
 
-      <!-- Action Buttons -->
       <div class="mt-6 flex gap-3">
         <button
           class="rounded-md bg-[#5CE1E6] px-4 py-2 text-sm font-medium text-[#030027] transition hover:bg-[#5CE1E6]/80"
@@ -162,7 +152,6 @@ function renderStars(rating: number): string {
       </div>
     </div>
 
-    <!-- Review Modal -->
     <ReviewModal
       :is-open="isReviewModalOpen"
       :videogame-id="videogameId"

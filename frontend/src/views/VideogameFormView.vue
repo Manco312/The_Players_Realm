@@ -143,20 +143,15 @@ onMounted(() => {
 
 <template>
   <div class="mx-auto max-w-3xl">
-    <!-- Form Card -->
     <div class="rounded-lg bg-[#151E3F] p-6 shadow-lg">
-      <!-- Header -->
       <div class="mb-6">
         <h1 class="text-2xl font-bold text-[#F2F3D9]">Videogame Form</h1>
         <p class="text-sm text-[#F2F3D9]/60">Form for creation/editing videogames for the Realm!</p>
       </div>
 
-      <!-- Form -->
       <form class="space-y-6" @submit.prevent="handleSubmit">
-        <!-- Name -->
         <TextInput v-model="form.name" label="Name" placeholder="Enter videogame name" />
 
-        <!-- Genre -->
         <SelectInput
           v-model="form.genre"
           label="Genre"
@@ -164,7 +159,6 @@ onMounted(() => {
           placeholder="Select genre"
         />
 
-        <!-- Description -->
         <TextAreaInput
           v-model="form.description"
           label="Description"
@@ -172,7 +166,6 @@ onMounted(() => {
           :rows="4"
         />
 
-        <!-- Online -->
         <SelectInput
           v-model="selectedOnline"
           label="Online"
@@ -180,7 +173,6 @@ onMounted(() => {
           placeholder="Select online status"
         />
 
-        <!-- Price, Total Sales, Release Year, Director -->
         <div class="grid grid-cols-4 gap-4">
           <TextInput v-model="form.price" label="Price" type="number" placeholder="0" />
           <TextInput v-model="form.totalSales" label="Total Sales" type="number" placeholder="0" />
@@ -193,7 +185,6 @@ onMounted(() => {
           <TextInput v-model="form.director" label="Director" placeholder="Director name" />
         </div>
 
-        <!-- Studio -->
         <SelectInput
           v-model="selectedStudio"
           label="Studio"
@@ -201,7 +192,6 @@ onMounted(() => {
           placeholder="Select studio"
         />
 
-        <!-- Image Upload -->
         <div class="flex flex-col gap-2">
           <label class="text-sm font-medium text-[#F2F3D9]">Videogame Image</label>
           <div class="flex items-center gap-4">
@@ -220,7 +210,6 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- Actions -->
         <div class="flex items-center justify-center gap-4 pt-4">
           <button
             type="button"

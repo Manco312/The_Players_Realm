@@ -1,4 +1,4 @@
-// Made by: Santiago Manco
+// Made by: Santiago Manco, Luciana Hoyos and Juan Pablo
 import { createRouter, createWebHistory } from 'vue-router';
 
 import HomeView from '@/views/HomeView.vue';

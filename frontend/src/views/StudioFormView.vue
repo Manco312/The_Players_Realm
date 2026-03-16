@@ -73,9 +73,7 @@ onMounted(() => {
 
 <template>
   <div class="mx-auto max-w-3xl">
-    <!-- Form Card -->
     <div class="rounded-lg border border-[#F2F3D9]/20 bg-[#151E3F] p-6 shadow-lg">
-      <!-- Header -->
       <div class="mb-6">
         <h1 class="text-2xl font-bold text-[#F2F3D9]">Studio Form</h1>
         <p class="text-sm text-[#F2F3D9]/60">
@@ -83,12 +81,9 @@ onMounted(() => {
         </p>
       </div>
 
-      <!-- Form -->
       <form class="space-y-6" @submit.prevent="handleSubmit">
-        <!-- Name -->
         <TextInput v-model="form.name" label="Name" placeholder="Enter studio name" />
 
-        <!-- Country -->
         <SelectInput
           v-model="form.country"
           label="Country"
@@ -96,7 +91,6 @@ onMounted(() => {
           placeholder="Select country"
         />
 
-        <!-- Founded Year -->
         <TextInput
           v-model="form.foundedYear"
           label="Founded Year"
@@ -104,7 +98,6 @@ onMounted(() => {
           placeholder="Enter founded year"
         />
 
-        <!-- Actions -->
         <div class="flex items-center justify-center gap-4 pt-4">
           <button
             type="button"

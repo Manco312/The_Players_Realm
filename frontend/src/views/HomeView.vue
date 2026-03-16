@@ -35,7 +35,6 @@ const adminUsers = computed(() => UserService.getAdminUsers());
 
 <template>
   <div class="min-h-full">
-    <!-- Top Bar Charts -->
     <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
       <div class="h-48">
         <BarChart :chart-data="salesChartData" title="Top Games by Sales" />
@@ -48,33 +47,25 @@ const adminUsers = computed(() => UserService.getAdminUsers());
       </div>
     </div>
 
-    <!-- Middle Section -->
     <div class="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
-      <!-- Doughnut Chart - Genre -->
       <div class="h-56">
         <DoughnutChart :chart-data="genreChartData" title="Games by Genre" />
       </div>
 
-      <!-- Stats Card - Reviews -->
       <StatCard :value="totalReviews" label="Reviews in the Realm" icon="clock" />
 
-      <!-- Admin List -->
       <div class="flex items-center justify-center">
         <AdminList :admins="adminUsers" />
       </div>
     </div>
 
-    <!-- Bottom Section -->
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      <!-- Doughnut Chart - Studios by Country -->
       <div class="h-56">
         <DoughnutChart :chart-data="studioCountryChartData" title="Studios by Country" />
       </div>
 
-      <!-- Stats Card - Users -->
       <StatCard :value="totalUsers" label="Users in the Realm" icon="users" />
 
-      <!-- Quick Links -->
       <div class="flex flex-col items-center justify-center gap-3">
         <RouterLink
           to="/studios/map"

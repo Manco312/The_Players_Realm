@@ -1,3 +1,5 @@
+// Made by: Luciana Hoyos and Juan Pablo
+
 import type { ChartData } from '@/types/ChartTypes';
 import { useStudioStore } from '@/stores/studiostore';
 import { COUNTRY_CODE_MAP } from '@/constants/countryCodeMap';

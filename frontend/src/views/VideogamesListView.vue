@@ -75,12 +75,9 @@ function handleDelete(id: number): void {
 
 <template>
   <div class="flex flex-col gap-6">
-    <!-- Title -->
     <h1 class="text-center text-3xl font-bold text-[#F2F3D9]">Videogames List</h1>
 
-    <!-- Header Section -->
     <div class="flex flex-wrap items-start justify-between gap-6">
-      <!-- Charts Row -->
       <div class="flex flex-wrap gap-4">
         <div class="w-72">
           <BarChart :chartData="salesChartData" title="Top Sales" />
@@ -96,7 +93,6 @@ function handleDelete(id: number): void {
         </div>
       </div>
 
-      <!-- Stats and Create Button -->
       <div class="flex flex-col items-end gap-4">
         <StatCard :value="totalVideogames" label="Registered games" />
         <button
@@ -109,7 +105,6 @@ function handleDelete(id: number): void {
       </div>
     </div>
 
-    <!-- Filters -->
     <div class="flex gap-4">
       <div class="w-40">
         <SelectInput
@@ -129,7 +124,6 @@ function handleDelete(id: number): void {
       </div>
     </div>
 
-    <!-- Table -->
     <div class="overflow-hidden rounded-lg border border-[#151E3F]">
       <table class="w-full">
         <thead>
@@ -155,7 +149,6 @@ function handleDelete(id: number): void {
             <td class="px-4 py-3 text-sm text-[#F2F3D9]">{{ getStudioName(game.studioId) }}</td>
             <td class="px-4 py-3">
               <div class="flex items-center justify-center gap-2">
-                <!-- Delete Button (Admin only) -->
                 <button
                   v-if="isAdmin"
                   class="rounded p-1 text-[#C16E70] transition hover:bg-[#C16E70]/20"
@@ -178,7 +171,6 @@ function handleDelete(id: number): void {
                   </svg>
                 </button>
 
-                <!-- Edit Button (Admin only) -->
                 <button
                   v-if="isAdmin"
                   class="rounded p-1 text-[#5CE1E6] transition hover:bg-[#5CE1E6]/20"
@@ -201,7 +193,6 @@ function handleDelete(id: number): void {
                   </svg>
                 </button>
 
-                <!-- View Detail Button (All users) -->
                 <button
                   class="rounded p-1 text-[#DC9E82] transition hover:bg-[#DC9E82]/20"
                   title="View Detail"
@@ -226,7 +217,6 @@ function handleDelete(id: number): void {
             </td>
           </tr>
 
-          <!-- Empty state -->
           <tr v-if="videogames.length === 0">
             <td colspan="6" class="px-4 py-8 text-center text-[#F2F3D9]/60">No videogames found</td>
           </tr>
