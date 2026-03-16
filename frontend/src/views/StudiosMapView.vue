@@ -8,23 +8,45 @@ import { computed, onMounted, ref, watch } from 'vue';
 
 // Internal Imports
 import StatCard from '@/components/StatCard.vue';
-import { CODE_TO_COUNTRY_MAP } from '@/constants/countryCodeMap';
+import { CODE_TO_COUNTRY_MAP, COUNTRY_CODE_MAP } from '@/constants/countryCodeMap';
 import { StudioService } from '@/services/StudioService';
+import { useStudioStore } from '@/stores/studiostore';
 
 // Variables
+const studioStore = useStudioStore();
 const mapContainer = ref<HTMLElement | null>(null);
 const mapInstance = ref<L.Map | null>(null);
 const geoJsonLayer = ref<L.GeoJSON | null>(null);
 const geoJsonData = ref<GeoJSON.FeatureCollection | null>(null);
 
 // Selectors
-const countriesWithStudios = computed(() => StudioService.getCountriesWithStudiosCount());
+const studioCountByCountry = computed(() => {
+  const countryCounts: Record<string, number> = {};
+  studioStore.studios.forEach((studio) => {
+    countryCounts[studio.country] = (countryCounts[studio.country] || 0) + 1;
+  });
+  return countryCounts;
+});
 
-const countryWithMost = computed(() => StudioService.getCountryWithMostStudios());
+const countriesWithStudios = computed(() => Object.keys(studioCountByCountry.value).length);
 
-const countryWithLeast = computed(() => StudioService.getCountryWithLeastStudios());
+const countryWithMost = computed(() => {
+  const entries = Object.entries(studioCountByCountry.value);
+  if (entries.length === 0) return null;
+  const [country, count] = entries.reduce((max, current) =>
+    current[1] > max[1] ? current : max,
+  );
+  return { country, count };
+});
 
-const studioCountByCountry = computed(() => StudioService.getStudioCountByCountry());
+const countryWithLeast = computed(() => {
+  const entries = Object.entries(studioCountByCountry.value);
+  if (entries.length === 0) return null;
+  const [country, count] = entries.reduce((min, current) =>
+    current[1] < min[1] ? current : min,
+  );
+  return { country, count };
+});
 
 // Functions
 function getColor(studioCount: number, maxCount: number): string {
@@ -46,10 +68,24 @@ function getMaxStudioCount(): number {
 
 function getStudioCountForFeature(feature: GeoJSON.Feature): number {
   const countryCode = feature.properties?.ISO_A3 || feature.properties?.iso_a3;
-  const countryName = CODE_TO_COUNTRY_MAP[countryCode];
+  const countryNameFromCode = CODE_TO_COUNTRY_MAP[countryCode];
+  const studioData = studioCountByCountry.value;
 
-  if (countryName && studioCountByCountry.value[countryName]) {
-    return studioCountByCountry.value[countryName];
+  // Try to match by the mapped country name first
+  if (countryNameFromCode && studioData[countryNameFromCode]) {
+    return studioData[countryNameFromCode];
+  }
+
+  // Also try to match directly by country code (e.g., "USA" stored directly)
+  if (studioData[countryCode]) {
+    return studioData[countryCode];
+  }
+
+  // Try to match by any country that maps to this code
+  for (const [storedCountry, count] of Object.entries(studioData)) {
+    if (COUNTRY_CODE_MAP[storedCountry] === countryCode) {
+      return count;
+    }
   }
 
   return 0;
@@ -153,9 +189,13 @@ onMounted(() => {
 });
 
 // Watch for changes in studio data
-watch(studioCountByCountry, () => {
-  updateMap();
-});
+watch(
+  () => studioStore.studios,
+  () => {
+    updateMap();
+  },
+  { deep: true },
+);
 </script>
 
 <template>
