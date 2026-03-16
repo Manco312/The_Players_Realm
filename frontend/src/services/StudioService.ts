@@ -1,8 +1,6 @@
-// Made by: Santiago Manco and Luciana Hoyos
-
-// Internal Imports
 import type { ChartData } from '@/types/ChartTypes';
 import { useStudioStore } from '@/stores/studiostore';
+import { COUNTRY_CODE_MAP } from '@/constants/countryCodeMap';
 
 export class StudioService {
   static getStudios() {
@@ -15,6 +13,51 @@ export class StudioService {
 
   static getTotalStudios(): number {
     return useStudioStore().studios.length;
+  }
+
+  static getStudioCountByCountry(): Record<string, number> {
+    const studios = useStudioStore().studios;
+    const countryCounts: Record<string, number> = {};
+
+    studios.forEach((studio) => {
+      const isoCode = COUNTRY_CODE_MAP[studio.country] || studio.country;
+
+      if (isoCode) {
+        countryCounts[isoCode] = (countryCounts[isoCode] || 0) + 1;
+      }
+    });
+
+    return countryCounts;
+  }
+
+  static getCountryWithMostStudios(): { country: string; count: number } | null {
+    const countryCounts = this.getStudioCountByCountry();
+    const entries = Object.entries(countryCounts);
+
+    if (entries.length === 0) return null;
+
+    const [country, count] = entries.reduce((max, current) =>
+      current[1] > max[1] ? current : max,
+    );
+
+    return { country, count };
+  }
+
+  static getCountryWithLeastStudios(): { country: string; count: number } | null {
+    const countryCounts = this.getStudioCountByCountry();
+    const entries = Object.entries(countryCounts);
+
+    if (entries.length === 0) return null;
+
+    const [country, count] = entries.reduce((min, current) =>
+      current[1] < min[1] ? current : min,
+    );
+
+    return { country, count };
+  }
+
+  static getCountriesWithStudiosCount(): number {
+    return Object.keys(this.getStudioCountByCountry()).length;
   }
 
   static getUniqueCountries(): string[] {

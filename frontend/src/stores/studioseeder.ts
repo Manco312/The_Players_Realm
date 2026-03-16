@@ -11,7 +11,7 @@ export const studioSeeder: StudioInterface[] = [
   {
     id: 2,
     name: 'Rockstar Games',
-    country: 'USA',
+    country: 'United States',
     foundedYear: 1998,
   },
   {

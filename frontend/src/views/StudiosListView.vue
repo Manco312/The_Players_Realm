@@ -65,7 +65,7 @@ function handleDelete(id: number): void {
         <StatCard :value="totalStudios" label="Registered studios" />
         <button
           class="rounded-md bg-[#C16E70] px-4 py-2 font-semibold text-[#F2F3D9] transition hover:bg-[#A85558]"
-          @click="router.push('/home')"
+          @click="router.push('/studios/map')"
         >
           Check our Studios Map
         </button>

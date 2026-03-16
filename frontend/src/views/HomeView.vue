@@ -77,7 +77,7 @@ const adminUsers = computed(() => UserService.getAdminUsers());
       <!-- Quick Links -->
       <div class="flex flex-col items-center justify-center gap-3">
         <RouterLink
-          to="/studios-map"
+          to="/studios/map"
           class="w-48 rounded-md bg-[#DC9E82] px-4 py-2 text-center text-sm font-semibold text-[#030027] transition hover:bg-[#C16E70]"
         >
           Check our Studios Map
