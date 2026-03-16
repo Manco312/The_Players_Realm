@@ -30,7 +30,8 @@ export class ReviewService {
     const ratingCounts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
 
     reviews.forEach((review) => {
-      ratingCounts[review.rating] = (ratingCounts[review.rating] || 0) + 1;
+      const rating = Number(review.rating);
+      ratingCounts[rating] = (ratingCounts[rating] || 0) + 1;
     });
 
     return {
