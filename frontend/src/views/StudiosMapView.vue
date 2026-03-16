@@ -8,7 +8,7 @@ import { computed, onMounted, ref, watch } from 'vue';
 
 // Internal Imports
 import StatCard from '@/components/StatCard.vue';
-import { CODE_TO_COUNTRY_MAP, COUNTRY_CODE_MAP } from '@/constants/countryCodeMap';
+import { COUNTRY_CODE_MAP } from '@/constants/countryCodeMap';
 import { StudioService } from '@/services/StudioService';
 import { useStudioStore } from '@/stores/studiostore';
 
@@ -48,22 +48,28 @@ function getMaxStudioCount(): number {
 
 function getStudioCountForFeature(feature: GeoJSON.Feature): number {
   const countryCode = feature.properties?.ISO_A3 || feature.properties?.iso_a3;
-  const countryNameFromCode = CODE_TO_COUNTRY_MAP[countryCode];
+  const countryAdmin = feature.properties?.ADMIN;
   const studioData = studioCountByCountry.value;
 
-  // Try to match by the mapped country name first
-  if (countryNameFromCode && studioData[countryNameFromCode]) {
-    return studioData[countryNameFromCode];
+  // Skip invalid country codes (GeoJSON uses -99 for territories without ISO code)
+  if (!countryCode || countryCode === '-99') {
+    return 0;
   }
 
-  // Also try to match directly by country code (e.g., "USA" stored directly)
-  if (studioData[countryCode]) {
+  // 1. Try to match by ADMIN name from GeoJSON (e.g., "Japan", "Poland", "Russia")
+  if (countryAdmin && studioData[countryAdmin] !== undefined) {
+    return studioData[countryAdmin];
+  }
+
+  // 2. Try to match by country code directly (e.g., "USA" stored as country name)
+  if (studioData[countryCode] !== undefined) {
     return studioData[countryCode];
   }
 
-  // Try to match by any country that maps to this code
+  // 3. Try reverse lookup: our stored country maps to this ISO code
   for (const [storedCountry, count] of Object.entries(studioData)) {
-    if (COUNTRY_CODE_MAP[storedCountry] === countryCode) {
+    const storedCountryCode = COUNTRY_CODE_MAP[storedCountry];
+    if (storedCountryCode === countryCode) {
       return count;
     }
   }
@@ -87,9 +93,7 @@ function styleFeature(feature: GeoJSON.Feature | undefined): L.PathOptions {
 }
 
 function onEachFeature(feature: GeoJSON.Feature, layer: L.Layer): void {
-  const countryCode = feature.properties?.ISO_A3 || feature.properties?.iso_a3;
-  const countryName =
-    CODE_TO_COUNTRY_MAP[countryCode] || feature.properties?.ADMIN || feature.properties?.name;
+  const countryName = feature.properties?.ADMIN || feature.properties?.name || 'Unknown';
   const studioCount = getStudioCountForFeature(feature);
 
   const popupContent = `
@@ -125,10 +129,6 @@ async function loadGeoJson(): Promise<void> {
       'https://raw.githubusercontent.com/datasets/geo-countries/master/data/countries.geojson',
     );
     geoJsonData.value = await response.json();
-
-    console.log('[v0] Studios in store:', studioStore.studios);
-    console.log('[v0] Studio count by country:', studioCountByCountry.value);
-
     updateMap();
   } catch (error) {
     console.error('Error loading GeoJSON:', error);
