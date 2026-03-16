@@ -48,35 +48,28 @@ function getMaxStudioCount(): number {
 
 function getStudioCountForFeature(feature: GeoJSON.Feature): number {
   const props = feature.properties;
-  const countryCode = props?.ISO_A3 || props?.iso_a3;
-  const countryAdmin = props?.ADMIN || props?.admin || props?.name || props?.NAME;
+  const countryCode = props?.ISO_A3;
+  const countryName = props?.name;
   const studioData = studioCountByCountry.value;
 
-  // Debug - log feature properties for first few and for countries we have
-  const ourCountries = ['Poland', 'USA', 'Japan', 'Russia'];
-  if (ourCountries.some(c => JSON.stringify(props).includes(c))) {
-    console.log('[v0] Found country feature:', props);
-  }
-
-  // Skip invalid country codes (GeoJSON uses -99 for territories without ISO code)
+  // Skip invalid country codes
   if (!countryCode || countryCode === '-99') {
     return 0;
   }
 
-  // 1. Try to match by ADMIN name from GeoJSON (e.g., "Japan", "Poland", "Russia")
-  if (countryAdmin && studioData[countryAdmin] !== undefined) {
-    return studioData[countryAdmin];
+  // 1. Match by country name (Japan, Poland, Russia)
+  if (countryName && countryName in studioData) {
+    return studioData[countryName];
   }
 
-  // 2. Try to match by country code directly (e.g., "USA" stored as country name)
-  if (studioData[countryCode] !== undefined) {
+  // 2. Match by ISO code directly (USA stored matches ISO_A3 "USA")
+  if (countryCode in studioData) {
     return studioData[countryCode];
   }
 
-  // 3. Try reverse lookup: our stored country maps to this ISO code
+  // 3. Reverse lookup: stored country name maps to this ISO code
   for (const [storedCountry, count] of Object.entries(studioData)) {
-    const storedCountryCode = COUNTRY_CODE_MAP[storedCountry];
-    if (storedCountryCode === countryCode) {
+    if (COUNTRY_CODE_MAP[storedCountry] === countryCode) {
       return count;
     }
   }
@@ -143,10 +136,6 @@ async function loadGeoJson(): Promise<void> {
 }
 
 function updateMap(): void {
-  console.log('[v0] updateMap called');
-  console.log('[v0] studioStore.studios:', studioStore.studios);
-  console.log('[v0] studioCountByCountry.value:', studioCountByCountry.value);
-  
   if (!mapInstance.value || !geoJsonData.value) return;
 
   if (geoJsonLayer.value) {
