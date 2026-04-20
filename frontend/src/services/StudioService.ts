@@ -4,6 +4,7 @@ import type { ChartData } from '@/types/ChartTypes';
 import { useStudioStore } from '@/stores/studiostore';
 import { COUNTRY_CODE_MAP } from '@/constants/countryCodeMap';
 import type { CreateStudioDTO } from '@/dtos/CreateStudioDTO';
+import type { UpdateStudioDTO } from '@/dtos/UpdateStudioDTO';
 import type { StudioInterface } from '@/interfaces/StudioInterface';
 
 export class StudioService {
@@ -79,7 +80,7 @@ export class StudioService {
     });
   }
 
-  static updateStudio(id: number, studio: Partial<StudioInterface>): void {
+  static updateStudio(id: number, studio: UpdateStudioDTO): void {
     const store = useStudioStore();
     const index = store.studios.findIndex((s) => s.id === id);
 

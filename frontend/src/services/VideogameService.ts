@@ -3,6 +3,7 @@
 // Internal Imports
 import type { ChartData } from '@/types/ChartTypes';
 import type { CreateVideogameDTO } from '@/dtos/CreateVideogameDTO';
+import type { UpdateVideogameDTO } from '@/dtos/UpdateVideogameDTO';
 import type { VideogameInterface } from '@/interfaces/VideogameInterface';
 import { useVideogameStore } from '@/stores/videogamestore';
 
@@ -26,7 +27,7 @@ export class VideogameService {
     });
   }
 
-  static updateVideogame(id: number, videogame: Partial<VideogameInterface>): void {
+  static updateVideogame(id: number, videogame: UpdateVideogameDTO): void {
     const store = useVideogameStore();
     const index = store.videogames.findIndex((game) => game.id === id);
     if (index !== -1) {
