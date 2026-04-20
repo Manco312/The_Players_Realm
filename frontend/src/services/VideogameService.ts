@@ -8,11 +8,11 @@ import type { VideogameInterface } from '@/interfaces/VideogameInterface';
 import { useVideogameStore } from '@/stores/videogamestore';
 
 export class VideogameService {
-  static getVideogames() {
+  static getVideogames(): VideogameInterface[] {
     return useVideogameStore().videogames;
   }
 
-  static getVideogameById(id: number) {
+  static getVideogameById(id: number): VideogameInterface | undefined {
     return useVideogameStore().videogames.find((game) => game.id === id);
   }
 

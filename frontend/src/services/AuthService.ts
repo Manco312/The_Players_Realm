@@ -1,6 +1,8 @@
 // Made by: Santiago Manco
-import { useUserStore } from '@/stores/userstore.js';
+
+// Internal Imports
 import type { UserInterface } from '@/interfaces/UserInterface';
+import { useUserStore } from '@/stores/userstore.js';
 
 export default class AuthService {
   public static login(email: string, password: string): UserInterface | null {

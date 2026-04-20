@@ -1,5 +1,6 @@
 // Made by: Luciana Hoyos and Juan Pablo
 
+// Internal Imports
 import type { ChartData } from '@/types/ChartTypes';
 import { useStudioStore } from '@/stores/studiostore';
 import { COUNTRY_CODE_MAP } from '@/constants/countryCodeMap';
@@ -8,11 +9,11 @@ import type { UpdateStudioDTO } from '@/dtos/UpdateStudioDTO';
 import type { StudioInterface } from '@/interfaces/StudioInterface';
 
 export class StudioService {
-  static getStudios() {
+  static getStudios(): StudioInterface[] {
     return useStudioStore().studios;
   }
 
-  static getStudioById(id: number) {
+  static getStudioById(id: number): StudioInterface | undefined {
     return useStudioStore().studios.find((studio) => studio.id === id);
   }
 
