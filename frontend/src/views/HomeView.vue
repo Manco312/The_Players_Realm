@@ -15,7 +15,7 @@ import { StudioService } from '@/services/StudioService';
 import { UserService } from '@/services/UserService';
 import { VideogameService } from '@/services/VideogameService';
 
-// Selectors
+// Variables
 const salesChartData = computed(() => VideogameService.getSalesByGame());
 
 const genreChartData = computed(() => VideogameService.getVideogamesByGenre());

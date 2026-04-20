@@ -26,7 +26,6 @@ const form = ref<CreateStudioDTO>({
 
 const isSubmitting = ref(false);
 
-// Selectors
 const countryOptions = computed(() => {
   return COUNTRIES.map((country) => ({
     value: country,

@@ -19,7 +19,6 @@ const authStore = useAuthStore();
 const genreFilter = ref('');
 const studioFilter = ref('');
 
-// Selectors
 const isAdmin = computed(() => authStore.currentUser?.role === 'Admin');
 
 const videogames = computed(() => {
@@ -51,13 +50,9 @@ const studioOptions = computed(() =>
 );
 
 const salesChartData = computed(() => VideogameService.getSalesByGame());
-
 const genreChartData = computed(() => VideogameService.getVideogamesByGenre());
-
 const releaseYearChartData = computed(() => VideogameService.getGamesByReleaseYear());
-
 const onlineVsOfflineChartData = computed(() => VideogameService.getOnlineVsOffline());
-
 const totalVideogames = computed(() => VideogameService.getTotalVideogames());
 
 // Functions

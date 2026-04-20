@@ -16,7 +16,6 @@ const router = useRouter();
 const authStore = useAuthStore();
 const countryFilter = ref('');
 
-// Selectors
 const isAdmin = computed(() => authStore.currentUser?.role === 'Admin');
 
 const studios = computed(() => {

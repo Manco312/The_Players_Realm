@@ -35,7 +35,6 @@ const form = ref<CreateVideogameDTO>({
 const isSubmitting = ref(false);
 const imagePreview = ref<string | null>(null);
 
-// Selectors
 const studios = computed(() => StudioService.getStudios());
 
 const studioOptions = computed(() =>

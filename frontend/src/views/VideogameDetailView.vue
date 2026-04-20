@@ -19,7 +19,6 @@ const router = useRouter();
 const videogameId = computed(() => Number(route.params.id));
 const isReviewModalOpen = ref(false);
 
-// Selectors
 const videogame = computed(() => VideogameService.getVideogameById(videogameId.value));
 
 const studio = computed(() => {

@@ -14,13 +14,10 @@ import { createOnEachFeature, createStyleFunction } from '@/utils/MapUtils';
 
 // Variables
 const studioStore = useStudioStore();
-
 const mapContainer = ref<HTMLElement | null>(null);
 const mapInstance = shallowRef<L.Map | null>(null);
 const geoJsonLayer = shallowRef<L.GeoJSON<any> | null>(null);
 const geoJsonData = ref<GeoJSON.FeatureCollection | null>(null);
-
-// Selectors
 const studioCountByCountry = computed(() => StudioService.getStudioCountByCountry());
 const countriesWithStudios = computed(() => StudioService.getCountriesWithStudiosCount());
 const countryWithMost = computed(() => StudioService.getCountryWithMostStudios());
