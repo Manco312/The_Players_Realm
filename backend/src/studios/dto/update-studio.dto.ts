@@ -1,5 +1,4 @@
-export class UpdateStudioDto {
-  name?: string;
-  country?: string;
-  foundedYear?: number;
-}
+import { PartialType } from '@nestjs/mapped-types';
+import { CreateStudioDto } from './create-studio.dto';
+
+export class UpdateStudioDto extends PartialType(CreateStudioDto) {}

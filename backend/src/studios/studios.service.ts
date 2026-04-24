@@ -1,38 +1,37 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Studio } from './entities/studio.entity';
 import { CreateStudioDto } from './dto/create-studio.dto';
 import { UpdateStudioDto } from './dto/update-studio.dto';
 
 @Injectable()
 export class StudiosService {
-  private studios: Studio[] = [];
-  private nextId = 1;
+  constructor(@InjectRepository(Studio) private readonly repo: Repository<Studio>) {}
 
-  findAll(): Studio[] {
-    return this.studios;
+  findAll(): Promise<Studio[]> {
+    return this.repo.find();
   }
 
-  findOne(id: number): Studio {
-    const studio = this.studios.find((s) => s.id === id);
+  async findOne(id: number): Promise<Studio> {
+    const studio = await this.repo.findOne({ where: { id } });
     if (!studio) throw new NotFoundException(`Studio #${id} not found`);
     return studio;
   }
 
-  create(createStudioDto: CreateStudioDto): Studio {
-    const studio: Studio = { id: this.nextId++, ...createStudioDto };
-    this.studios.push(studio);
-    return studio;
+  create(dto: CreateStudioDto): Promise<Studio> {
+    const studio = this.repo.create(dto);
+    return this.repo.save(studio);
   }
 
-  update(id: number, updateStudioDto: UpdateStudioDto): Studio {
-    const studio = this.findOne(id);
-    Object.assign(studio, updateStudioDto);
-    return studio;
+  async update(id: number, dto: UpdateStudioDto): Promise<Studio> {
+    const studio = await this.findOne(id);
+    Object.assign(studio, dto);
+    return this.repo.save(studio);
   }
 
-  remove(id: number): void {
-    const index = this.studios.findIndex((s) => s.id === id);
-    if (index === -1) throw new NotFoundException(`Studio #${id} not found`);
-    this.studios.splice(index, 1);
+  async remove(id: number): Promise<void> {
+    const studio = await this.findOne(id);
+    await this.repo.remove(studio);
   }
 }
