@@ -1,3 +1,6 @@
+// Author: Luciana Hoyos
+
+// External Imports
 import {
   Controller,
   Get,
@@ -12,15 +15,15 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+
+// Internal Imports
 import { ReviewsService } from './reviews.service';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-
 @UseGuards(JwtAuthGuard)
 @Controller('reviews')
 export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
-
   @Get()
   findAll(@Query('videogameId') videogameId?: string) {
     if (videogameId) {

@@ -1,5 +1,10 @@
+// Author: Santiago Manco
+
+// External Imports
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+// Internal Imports
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { StudiosModule } from './studios/studios.module';

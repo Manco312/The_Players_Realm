@@ -1,3 +1,6 @@
+// Author: Juan Pablo Padilla
+
+// External Imports
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Videogame } from '../../videogames/entities/videogame.entity';
 

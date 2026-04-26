@@ -1,7 +1,12 @@
+// Author: Santiago Manco
+
+// External Imports
 import { Injectable, OnApplicationBootstrap, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+
+// Internal Imports
 import { User } from '../users/entities/user.entity';
 import { Studio } from '../studios/entities/studio.entity';
 import { Videogame } from '../videogames/entities/videogame.entity';
@@ -14,7 +19,8 @@ export class SeedService implements OnApplicationBootstrap {
   constructor(
     @InjectRepository(User) private readonly users: Repository<User>,
     @InjectRepository(Studio) private readonly studios: Repository<Studio>,
-    @InjectRepository(Videogame) private readonly videogames: Repository<Videogame>,
+    @InjectRepository(Videogame)
+    private readonly videogames: Repository<Videogame>,
     @InjectRepository(Review) private readonly reviews: Repository<Review>,
   ) {}
 
@@ -28,9 +34,24 @@ export class SeedService implements OnApplicationBootstrap {
     const hashedUser = await bcrypt.hash('player123', 10);
 
     const [admin, player1, player2] = await this.users.save([
-      { username: 'admin', email: 'admin@realm.com', password: hashedAdmin, role: 'Admin' },
-      { username: 'player1', email: 'player1@realm.com', password: hashedUser, role: 'User' },
-      { username: 'player2', email: 'player2@realm.com', password: hashedUser, role: 'User' },
+      {
+        username: 'admin',
+        email: 'admin@realm.com',
+        password: hashedAdmin,
+        role: 'Admin',
+      },
+      {
+        username: 'player1',
+        email: 'player1@realm.com',
+        password: hashedUser,
+        role: 'User',
+      },
+      {
+        username: 'player2',
+        email: 'player2@realm.com',
+        password: hashedUser,
+        role: 'User',
+      },
     ]);
 
     const [cdProjekt, rockstar, nintendo] = await this.studios.save([
@@ -79,10 +100,30 @@ export class SeedService implements OnApplicationBootstrap {
     ]);
 
     await this.reviews.save([
-      { comment: 'Amazing RPG experience!', rating: '5', userId: player1.id, videogameId: witcher.id },
-      { comment: 'The best game I have ever played.', rating: '5', userId: player2.id, videogameId: gta.id },
-      { comment: 'Masterpiece of game design.', rating: '5', userId: admin.id, videogameId: zelda.id },
-      { comment: 'Good but a bit repetitive.', rating: '3', userId: player1.id, videogameId: gta.id },
+      {
+        comment: 'Amazing RPG experience!',
+        rating: '5',
+        userId: player1.id,
+        videogameId: witcher.id,
+      },
+      {
+        comment: 'The best game I have ever played.',
+        rating: '5',
+        userId: player2.id,
+        videogameId: gta.id,
+      },
+      {
+        comment: 'Masterpiece of game design.',
+        rating: '5',
+        userId: admin.id,
+        videogameId: zelda.id,
+      },
+      {
+        comment: 'Good but a bit repetitive.',
+        rating: '3',
+        userId: player1.id,
+        videogameId: gta.id,
+      },
     ]);
 
     this.logger.log('Database seeded successfully!');

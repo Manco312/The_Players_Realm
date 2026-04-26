@@ -1,13 +1,20 @@
+// Author: Juan Pablo Padilla
+
+// External Imports
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Studio } from './entities/studio.entity';
+
+// Internal Imports
 import { CreateStudioDto } from './dto/create-studio.dto';
 import { UpdateStudioDto } from './dto/update-studio.dto';
 
 @Injectable()
 export class StudiosService {
-  constructor(@InjectRepository(Studio) private readonly repo: Repository<Studio>) {}
+  constructor(
+    @InjectRepository(Studio) private readonly repo: Repository<Studio>,
+  ) {}
 
   findAll(): Promise<Studio[]> {
     return this.repo.find();

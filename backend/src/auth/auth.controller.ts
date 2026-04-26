@@ -1,5 +1,17 @@
-import { Controller, Post, Get, Body, UseGuards, Request } from '@nestjs/common';
+// Author: Santiago Manco
+
+// External Imports
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
+
+// Internal Imports
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 

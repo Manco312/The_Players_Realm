@@ -1,4 +1,14 @@
-import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+// Author: Luciana Hoyos
+
+// External Imports
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 
 export class CreateVideogameDto {

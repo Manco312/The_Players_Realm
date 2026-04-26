@@ -1,9 +1,13 @@
+// Author: Juan Pablo Padilla
+
+// External Imports
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+// Internal Imports
 import { StudiosService } from './studios.service';
 import { StudiosController } from './studios.controller';
 import { Studio } from './entities/studio.entity';
-
 @Module({
   imports: [TypeOrmModule.forFeature([Studio])],
   controllers: [StudiosController],

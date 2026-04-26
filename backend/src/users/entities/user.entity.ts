@@ -1,3 +1,6 @@
+// Author: Santiago Manco
+
+// External Imports
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Review } from '../../reviews/entities/review.entity';
 

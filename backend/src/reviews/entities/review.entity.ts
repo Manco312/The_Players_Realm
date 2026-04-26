@@ -1,7 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
-import { Videogame } from '../../videogames/entities/videogame.entity';
+// Author: Luciana Hoyos
 
+// External Imports
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { User } from '../../users/entities/user.entity';
+
+// Internal Imports
+import { Videogame } from '../../videogames/entities/videogame.entity';
 @Entity('reviews')
 export class Review {
   @PrimaryGeneratedColumn()

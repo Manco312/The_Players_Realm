@@ -1,3 +1,6 @@
+// Author: Santiago Manco
+
+// External Imports
 import { Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 

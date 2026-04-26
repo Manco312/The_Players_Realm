@@ -1,5 +1,13 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength, IsIn } from 'class-validator';
+// Author: Santiago Manco
 
+// External Imports
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MinLength,
+  IsIn,
+} from 'class-validator';
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()

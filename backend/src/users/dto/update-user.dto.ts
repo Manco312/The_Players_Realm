@@ -1,3 +1,6 @@
+// Author: Santiago Manco
+
+// External Imports
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateUserDto } from './create-user.dto';
 

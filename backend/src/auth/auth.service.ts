@@ -1,16 +1,19 @@
+// Author: Santiago Manco
+
+// External Imports
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersService } from '../users/users.service';
-import { LoginDto } from './dto/login.dto';
 
+// Internal Imports
+import { LoginDto } from './dto/login.dto';
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
-
   async login(dto: LoginDto) {
     const user = await this.usersService.findByEmail(dto.email);
 

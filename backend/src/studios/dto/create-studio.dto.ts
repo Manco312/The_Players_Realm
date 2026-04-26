@@ -1,3 +1,6 @@
+// Author: Juan Pablo Padilla
+
+// External Imports
 import { IsNotEmpty, IsNumber, IsString, Min } from 'class-validator';
 import { Type } from 'class-transformer';
 

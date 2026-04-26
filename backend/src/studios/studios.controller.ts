@@ -1,3 +1,6 @@
+// Author: Juan Pablo Padilla
+
+// External Imports
 import {
   Controller,
   Get,
@@ -11,6 +14,8 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+
+// Internal Imports
 import { StudiosService } from './studios.service';
 import { CreateStudioDto } from './dto/create-studio.dto';
 import { UpdateStudioDto } from './dto/update-studio.dto';

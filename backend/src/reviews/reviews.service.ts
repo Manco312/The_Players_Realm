@@ -1,13 +1,18 @@
+// Author: Luciana Hoyos
+
+// External Imports
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Review } from './entities/review.entity';
-import { CreateReviewDto } from './dto/create-review.dto';
 
+// Internal Imports
+import { CreateReviewDto } from './dto/create-review.dto';
 @Injectable()
 export class ReviewsService {
-  constructor(@InjectRepository(Review) private readonly repo: Repository<Review>) {}
-
+  constructor(
+    @InjectRepository(Review) private readonly repo: Repository<Review>,
+  ) {}
   findAll(): Promise<Review[]> {
     return this.repo.find();
   }

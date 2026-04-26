@@ -1,7 +1,11 @@
+// Author: Santiago Manco
+
+// External Imports
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { AppModule } from './app.module';
 
+// Internal Imports
+import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -22,7 +26,9 @@ async function bootstrap() {
   });
 
   await app.listen(process.env.PORT ?? 3000);
-  console.log(`Backend running on http://localhost:${process.env.PORT ?? 3000}/api`);
+  console.log(
+    `Backend running on http://localhost:${process.env.PORT ?? 3000}/api`,
+  );
 }
 
 void bootstrap();

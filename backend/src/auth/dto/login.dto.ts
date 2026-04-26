@@ -1,5 +1,7 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+// Author: Santiago Manco
 
+// External Imports
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 export class LoginDto {
   @IsEmail()
   email: string;

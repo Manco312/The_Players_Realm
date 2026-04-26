@@ -1,3 +1,6 @@
+// Author: Luciana Hoyos
+
+// External Imports
 import {
   Controller,
   Get,
@@ -11,6 +14,8 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+
+// Internal Imports
 import { VideogamesService } from './videogames.service';
 import { CreateVideogameDto } from './dto/create-videogame.dto';
 import { UpdateVideogameDto } from './dto/update-videogame.dto';
@@ -43,7 +48,10 @@ export class VideogamesController {
   @UseGuards(RolesGuard)
   @Roles('Admin')
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateVideogameDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateVideogameDto,
+  ) {
     return this.videogamesService.update(id, dto);
   }
 

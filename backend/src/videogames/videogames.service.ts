@@ -1,13 +1,20 @@
+// Author: Luciana Hoyos
+
+// External Imports
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Videogame } from './entities/videogame.entity';
+
+// Internal Imports
 import { CreateVideogameDto } from './dto/create-videogame.dto';
 import { UpdateVideogameDto } from './dto/update-videogame.dto';
 
 @Injectable()
 export class VideogamesService {
-  constructor(@InjectRepository(Videogame) private readonly repo: Repository<Videogame>) {}
+  constructor(
+    @InjectRepository(Videogame) private readonly repo: Repository<Videogame>,
+  ) {}
 
   findAll(): Promise<Videogame[]> {
     return this.repo.find();

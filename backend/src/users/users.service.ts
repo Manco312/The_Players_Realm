@@ -1,25 +1,35 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+// Author: Santiago Manco
+
+// External Imports
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+
+// Internal Imports
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private readonly repo: Repository<User>) {}
-
+  constructor(
+    @InjectRepository(User) private readonly repo: Repository<User>,
+  ) {}
   async findAll(): Promise<Omit<User, 'password'>[]> {
     const users = await this.repo.find();
-    return users.map(({ password: _, ...user }) => user as Omit<User, 'password'>);
+
+    return users.map(({ password: _, ...user }) => user);
   }
 
   async findOne(id: number): Promise<Omit<User, 'password'>> {
     const user = await this.repo.findOne({ where: { id } });
     if (!user) throw new NotFoundException(`User #${id} not found`);
     const { password: _, ...result } = user;
-    return result as Omit<User, 'password'>;
+    return result;
   }
 
   async findByEmail(email: string): Promise<User | null> {
@@ -34,10 +44,13 @@ export class UsersService {
     const user = this.repo.create({ ...dto, password: hashed });
     const saved = await this.repo.save(user);
     const { password: _, ...result } = saved;
-    return result as Omit<User, 'password'>;
+    return result;
   }
 
-  async update(id: number, dto: UpdateUserDto): Promise<Omit<User, 'password'>> {
+  async update(
+    id: number,
+    dto: UpdateUserDto,
+  ): Promise<Omit<User, 'password'>> {
     const user = await this.repo.findOne({ where: { id } });
     if (!user) throw new NotFoundException(`User #${id} not found`);
 
@@ -48,7 +61,7 @@ export class UsersService {
     Object.assign(user, dto);
     const saved = await this.repo.save(user);
     const { password: _, ...result } = saved;
-    return result as Omit<User, 'password'>;
+    return result;
   }
 
   async remove(id: number): Promise<void> {
