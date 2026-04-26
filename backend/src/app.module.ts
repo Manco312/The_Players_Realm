@@ -20,7 +20,7 @@ import { SeedService } from './database/seed.service';
   imports: [
     TypeOrmModule.forRoot({
       type: 'better-sqlite3',
-      database: 'database.sqlite',
+      database: process.env.SQLITE_PATH ?? 'database.sqlite',
       entities: [User, Studio, Videogame, Review],
       synchronize: true,
     }),
