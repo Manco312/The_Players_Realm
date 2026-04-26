@@ -1,7 +1,7 @@
 <!-- Made by: Santiago Manco -->
 <script setup lang="ts">
 // External Imports
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 // Internal Imports
@@ -12,6 +12,8 @@ import StatCard from '@/components/StatCard.vue';
 import { StudioService } from '@/services/StudioService';
 import { VideogameService } from '@/services/VideogameService';
 import { useAuthStore } from '@/stores/authstore';
+import type { StudioInterface } from '@/interfaces/StudioInterface';
+import type { VideogameInterface } from '@/interfaces/VideogameInterface';
 
 // Variables
 const router = useRouter();
@@ -19,10 +21,13 @@ const authStore = useAuthStore();
 const genreFilter = ref('');
 const studioFilter = ref('');
 
+const videogames = ref<VideogameInterface[]>([]);
+const studios = ref<StudioInterface[]>([]);
+
 const isAdmin = computed(() => authStore.currentUser?.role === 'Admin');
 
-const videogames = computed(() => {
-  let games = VideogameService.getVideogames();
+const filteredVideogames = computed(() => {
+  let games = videogames.value;
 
   if (genreFilter.value) {
     games = games.filter((game) => game.genre === genreFilter.value);
@@ -36,34 +41,46 @@ const videogames = computed(() => {
 });
 
 const genreOptions = computed(() =>
-  VideogameService.getUniqueGenres().map((genre) => ({
+  VideogameService.getUniqueGenres(videogames.value).map((genre) => ({
     value: genre,
     label: genre,
   })),
 );
 
 const studioOptions = computed(() =>
-  StudioService.getStudios().map((studio) => ({
+  studios.value.map((studio) => ({
     value: String(studio.id),
     label: studio.name,
   })),
 );
 
-const salesChartData = computed(() => VideogameService.getSalesByGame());
-const genreChartData = computed(() => VideogameService.getVideogamesByGenre());
-const releaseYearChartData = computed(() => VideogameService.getGamesByReleaseYear());
-const onlineVsOfflineChartData = computed(() => VideogameService.getOnlineVsOffline());
-const totalVideogames = computed(() => VideogameService.getTotalVideogames());
+const salesChartData = computed(() => VideogameService.getSalesByGame(videogames.value));
+const genreChartData = computed(() => VideogameService.getVideogamesByGenre(videogames.value));
+const releaseYearChartData = computed(() =>
+  VideogameService.getGamesByReleaseYear(videogames.value),
+);
+const onlineVsOfflineChartData = computed(() =>
+  VideogameService.getOnlineVsOffline(videogames.value),
+);
+const totalVideogames = computed(() => videogames.value.length);
+
+// Lifecycle
+onMounted(async () => {
+  [videogames.value, studios.value] = await Promise.all([
+    VideogameService.getVideogames(),
+    StudioService.getStudios(),
+  ]);
+});
 
 // Functions
 function getStudioName(studioId: number): string {
-  const studio = StudioService.getStudioById(studioId);
-  return studio?.name || 'Unknown';
+  return studios.value.find((s) => s.id === studioId)?.name || 'Unknown';
 }
 
-function handleDelete(id: number): void {
+async function handleDelete(id: number): Promise<void> {
   if (confirm('Are you sure you want to delete this videogame?')) {
-    VideogameService.deleteVideogame(id);
+    await VideogameService.deleteVideogame(id);
+    videogames.value = videogames.value.filter((g) => g.id !== id);
   }
 }
 </script>
@@ -133,7 +150,7 @@ function handleDelete(id: number): void {
         </thead>
         <tbody>
           <tr
-            v-for="game in videogames"
+            v-for="game in filteredVideogames"
             :key="game.id"
             class="border-b border-[#151E3F] bg-[#030027] transition hover:bg-[#151E3F]/50"
           >
@@ -212,7 +229,7 @@ function handleDelete(id: number): void {
             </td>
           </tr>
 
-          <tr v-if="videogames.length === 0">
+          <tr v-if="filteredVideogames.length === 0">
             <td colspan="6" class="px-4 py-8 text-center text-[#F2F3D9]/60">No videogames found</td>
           </tr>
         </tbody>

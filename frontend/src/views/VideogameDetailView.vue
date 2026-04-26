@@ -2,7 +2,7 @@
 // Made by: Santiago Manco
 
 // External Imports
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 // Internal Imports
@@ -11,6 +11,10 @@ import { ReviewService } from '@/services/ReviewService';
 import { StudioService } from '@/services/StudioService';
 import { UserService } from '@/services/UserService';
 import { VideogameService } from '@/services/VideogameService';
+import type { ReviewInterface } from '@/interfaces/ReviewInterface';
+import type { StudioInterface } from '@/interfaces/StudioInterface';
+import type { UserInterface } from '@/interfaces/UserInterface';
+import type { VideogameInterface } from '@/interfaces/VideogameInterface';
 
 // Variables
 const route = useRoute();
@@ -19,20 +23,34 @@ const router = useRouter();
 const videogameId = computed(() => Number(route.params.id));
 const isReviewModalOpen = ref(false);
 
-const videogame = computed(() => VideogameService.getVideogameById(videogameId.value));
+const videogame = ref<VideogameInterface | null>(null);
+const studio = ref<StudioInterface | null>(null);
+const reviews = ref<ReviewInterface[]>([]);
+const users = ref<UserInterface[]>([]);
 
-const studio = computed(() => {
-  if (!videogame.value) return null;
-  return StudioService.getStudioById(videogame.value.studioId);
-});
-
-const reviews = computed(() => ReviewService.getReviewsByVideogameId(videogameId.value));
-
-const reviewsWithUsers = computed(() => {
-  return reviews.value.map((review) => ({
+const reviewsWithUsers = computed(() =>
+  reviews.value.map((review) => ({
     ...review,
-    user: UserService.getUserById(review.userId),
-  }));
+    user: users.value.find((u) => u.id === review.userId),
+  })),
+);
+
+// Lifecycle
+onMounted(async () => {
+  const id = videogameId.value;
+  const [vg, gameReviews, allUsers] = await Promise.all([
+    VideogameService.getVideogameById(id),
+    ReviewService.getReviewsByVideogameId(id),
+    UserService.getUsers(),
+  ]);
+
+  videogame.value = vg;
+  reviews.value = gameReviews;
+  users.value = allUsers;
+
+  if (vg?.studioId) {
+    studio.value = await StudioService.getStudioById(vg.studioId);
+  }
 });
 
 // Functions
@@ -41,6 +59,11 @@ function handleOpenReviewModal(): void {
 }
 
 function handleCloseReviewModal(): void {
+  isReviewModalOpen.value = false;
+}
+
+async function handleReviewSubmitted(): Promise<void> {
+  reviews.value = await ReviewService.getReviewsByVideogameId(videogameId.value);
   isReviewModalOpen.value = false;
 }
 
@@ -155,7 +178,7 @@ function renderStars(rating: number): string {
       :is-open="isReviewModalOpen"
       :videogame-id="videogameId"
       @close="handleCloseReviewModal"
-      @submitted="handleCloseReviewModal"
+      @submitted="handleReviewSubmitted"
     />
   </div>
 </template>

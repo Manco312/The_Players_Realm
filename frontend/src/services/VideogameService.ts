@@ -1,62 +1,59 @@
 // Made by: Santiago Manco
 
+// External Imports
+import axiosInstance from '@/api/axiosInstance';
+
 // Internal Imports
 import type { ChartData } from '@/types/ChartTypes';
 import type { CreateVideogameDTO } from '@/dtos/CreateVideogameDTO';
 import type { UpdateVideogameDTO } from '@/dtos/UpdateVideogameDTO';
 import type { VideogameInterface } from '@/interfaces/VideogameInterface';
-import { useVideogameStore } from '@/stores/videogamestore';
 
 export class VideogameService {
-  static getVideogames(): VideogameInterface[] {
-    return useVideogameStore().videogames;
+  static async getVideogames(): Promise<VideogameInterface[]> {
+    const { data: videogames } = await axiosInstance.get<VideogameInterface[]>('/api/videogames');
+    return videogames;
   }
 
-  static getVideogameById(id: number): VideogameInterface | undefined {
-    return useVideogameStore().videogames.find((game) => game.id === id);
-  }
-
-  static createVideogame(videogame: CreateVideogameDTO): void {
-    const store = useVideogameStore();
-    const nextId =
-      store.videogames.length > 0 ? Math.max(...store.videogames.map((g) => g.id)) + 1 : 1;
-
-    store.videogames.push({
-      id: nextId,
-      ...videogame,
-    });
-  }
-
-  static updateVideogame(id: number, videogame: UpdateVideogameDTO): void {
-    const store = useVideogameStore();
-    const index = store.videogames.findIndex((game) => game.id === id);
-    if (index !== -1) {
-      store.videogames[index] = {
-        ...store.videogames[index],
-        ...videogame,
-      } as VideogameInterface;
+  static async getVideogameById(id: number): Promise<VideogameInterface | null> {
+    try {
+      const { data: videogame } = await axiosInstance.get<VideogameInterface>(
+        `/api/videogames/${id}`,
+      );
+      return videogame;
+    } catch {
+      return null;
     }
   }
 
-  static deleteVideogame(id: number): void {
-    const store = useVideogameStore();
-    const index = store.videogames.findIndex((game) => game.id === id);
-    if (index !== -1) {
-      store.videogames.splice(index, 1);
-    }
+  static async createVideogame(videogame: CreateVideogameDTO): Promise<VideogameInterface> {
+    const { data: createdVideogame } = await axiosInstance.post<VideogameInterface>(
+      '/api/videogames',
+      videogame,
+    );
+    return createdVideogame;
   }
 
-  static getUniqueGenres(): string[] {
-    const videogames = useVideogameStore().videogames;
+  static async updateVideogame(
+    id: number,
+    videogame: UpdateVideogameDTO,
+  ): Promise<VideogameInterface> {
+    const { data: updatedVideogame } = await axiosInstance.patch<VideogameInterface>(
+      `/api/videogames/${id}`,
+      videogame,
+    );
+    return updatedVideogame;
+  }
+
+  static async deleteVideogame(id: number): Promise<void> {
+    await axiosInstance.delete(`/api/videogames/${id}`);
+  }
+
+  static getUniqueGenres(videogames: VideogameInterface[]): string[] {
     return [...new Set(videogames.map((game) => game.genre))];
   }
 
-  static getTotalVideogames(): number {
-    return useVideogameStore().videogames.length;
-  }
-
-  static getOnlineVsOffline(): ChartData {
-    const videogames = useVideogameStore().videogames;
+  static getOnlineVsOffline(videogames: VideogameInterface[]): ChartData {
     const onlineCount = videogames.filter((game) => game.online).length;
     const offlineCount = videogames.filter((game) => !game.online).length;
 
@@ -74,8 +71,7 @@ export class VideogameService {
     };
   }
 
-  static getVideogamesByGenre(): ChartData {
-    const videogames = useVideogameStore().videogames;
+  static getVideogamesByGenre(videogames: VideogameInterface[]): ChartData {
     const genreCounts: Record<string, number> = {};
 
     videogames.forEach((game) => {
@@ -96,8 +92,7 @@ export class VideogameService {
     };
   }
 
-  static getSalesByGame(): ChartData {
-    const videogames = useVideogameStore().videogames;
+  static getSalesByGame(videogames: VideogameInterface[]): ChartData {
     const sortedGames = [...videogames].sort((a, b) => b.totalSales - a.totalSales).slice(0, 5);
 
     return {
@@ -114,8 +109,7 @@ export class VideogameService {
     };
   }
 
-  static getGamesByReleaseYear(): ChartData {
-    const videogames = useVideogameStore().videogames;
+  static getGamesByReleaseYear(videogames: VideogameInterface[]): ChartData {
     const yearCounts: Record<number, number> = {};
 
     videogames.forEach((game) => {

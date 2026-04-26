@@ -64,10 +64,10 @@ watch(
 );
 
 // Functions
-function handleSubmit(): void {
+async function handleSubmit(): Promise<void> {
   if (!form.value.comment.trim()) return;
 
-  ReviewService.createReview({
+  await ReviewService.createReview({
     ...form.value,
     comment: form.value.comment.trim(),
   });

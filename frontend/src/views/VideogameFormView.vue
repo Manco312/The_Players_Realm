@@ -11,6 +11,8 @@ import TextInput from '@/components/TextInput.vue';
 import type { CreateVideogameDTO } from '@/dtos/CreateVideogameDTO';
 import { StudioService } from '@/services/StudioService';
 import { VideogameService } from '@/services/VideogameService';
+import type { StudioInterface } from '@/interfaces/StudioInterface';
+import type { VideogameInterface } from '@/interfaces/VideogameInterface';
 
 // Variables
 const route = useRoute();
@@ -35,7 +37,8 @@ const form = ref<CreateVideogameDTO>({
 const isSubmitting = ref(false);
 const imagePreview = ref<string | null>(null);
 
-const studios = computed(() => StudioService.getStudios());
+const studios = ref<StudioInterface[]>([]);
+const videogames = ref<VideogameInterface[]>([]);
 
 const studioOptions = computed(() =>
   studios.value.map((studio) => ({
@@ -44,13 +47,12 @@ const studioOptions = computed(() =>
   })),
 );
 
-const genreOptions = computed(() => {
-  const genres = VideogameService.getUniqueGenres();
-  return genres.map((genre) => ({
+const genreOptions = computed(() =>
+  VideogameService.getUniqueGenres(videogames.value).map((genre) => ({
     value: genre,
     label: genre,
-  }));
-});
+  })),
+);
 
 const onlineOptions = [
   { value: 'true', label: 'True' },
@@ -94,21 +96,22 @@ function handleImageUpload(event: Event): void {
   }
 }
 
-function handleSubmit(): void {
+async function handleSubmit(): Promise<void> {
   if (!form.value.name.trim() || !form.value.genre || !form.value.studioId) {
     return;
   }
 
   isSubmitting.value = true;
-
-  if (isEditMode.value && videogameId.value) {
-    VideogameService.updateVideogame(videogameId.value, form.value);
-  } else {
-    VideogameService.createVideogame(form.value);
+  try {
+    if (isEditMode.value && videogameId.value) {
+      await VideogameService.updateVideogame(videogameId.value, form.value);
+    } else {
+      await VideogameService.createVideogame(form.value);
+    }
+    router.push('/videogames');
+  } finally {
+    isSubmitting.value = false;
   }
-
-  isSubmitting.value = false;
-  router.push('/videogames');
 }
 
 function handleCancel(): void {
@@ -116,9 +119,14 @@ function handleCancel(): void {
 }
 
 // Lifecycle
-onMounted(() => {
+onMounted(async () => {
+  [studios.value, videogames.value] = await Promise.all([
+    StudioService.getStudios(),
+    VideogameService.getVideogames(),
+  ]);
+
   if (isEditMode.value && videogameId.value) {
-    const videogame = VideogameService.getVideogameById(videogameId.value);
+    const videogame = videogames.value.find((g) => g.id === videogameId.value);
     if (videogame) {
       form.value = {
         name: videogame.name,

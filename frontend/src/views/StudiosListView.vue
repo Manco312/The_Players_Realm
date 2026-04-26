@@ -1,7 +1,7 @@
 <!-- Made by: Juan Pablo -->
 <script setup lang="ts">
 // External Imports
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 // Internal Imports
@@ -10,39 +10,45 @@ import SelectInput from '@/components/SelectInput.vue';
 import StatCard from '@/components/StatCard.vue';
 import { StudioService } from '@/services/StudioService';
 import { useAuthStore } from '@/stores/authstore';
+import type { StudioInterface } from '@/interfaces/StudioInterface';
 
 // Variables
 const router = useRouter();
 const authStore = useAuthStore();
 const countryFilter = ref('');
 
+const studios = ref<StudioInterface[]>([]);
+
 const isAdmin = computed(() => authStore.currentUser?.role === 'Admin');
 
-const studios = computed(() => {
-  let list = StudioService.getStudios();
-
+const filteredStudios = computed(() => {
   if (countryFilter.value) {
-    list = list.filter((studio) => studio.country === countryFilter.value);
+    return studios.value.filter((studio) => studio.country === countryFilter.value);
   }
-
-  return list;
+  return studios.value;
 });
 
 const countryOptions = computed(() =>
-  StudioService.getUniqueCountries().map((country) => ({
+  [...new Set(studios.value.map((s) => s.country))].map((country) => ({
     value: country,
     label: country,
   })),
 );
 
-const studiosByCountryChartData = computed(() => StudioService.getStudiosByCountry());
+const studiosByCountryChartData = computed(() => StudioService.getStudiosByCountry(studios.value));
 
-const totalStudios = computed(() => StudioService.getTotalStudios());
+const totalStudios = computed(() => studios.value.length);
+
+// Lifecycle
+onMounted(async () => {
+  studios.value = await StudioService.getStudios();
+});
 
 // Functions
-function handleDelete(id: number): void {
+async function handleDelete(id: number): Promise<void> {
   if (confirm('Are you sure you want to delete this studio?')) {
-    StudioService.deleteStudio(id);
+    await StudioService.deleteStudio(id);
+    studios.value = studios.value.filter((s) => s.id !== id);
   }
 }
 </script>
@@ -97,7 +103,7 @@ function handleDelete(id: number): void {
         </thead>
         <tbody>
           <tr
-            v-for="studio in studios"
+            v-for="studio in filteredStudios"
             :key="studio.id"
             class="border-b border-[#151E3F] bg-[#030027] transition hover:bg-[#151E3F]/50"
           >
@@ -153,7 +159,7 @@ function handleDelete(id: number): void {
             </td>
           </tr>
 
-          <tr v-if="studios.length === 0">
+          <tr v-if="filteredStudios.length === 0">
             <td colspan="4" class="px-4 py-8 text-center text-[#F2F3D9]/60">No studios found</td>
           </tr>
         </tbody>

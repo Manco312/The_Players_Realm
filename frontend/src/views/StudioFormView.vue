@@ -34,21 +34,22 @@ const countryOptions = computed(() => {
 });
 
 // Functions
-function handleSubmit(): void {
+async function handleSubmit(): Promise<void> {
   if (!form.value.name.trim() || !form.value.country) {
     return;
   }
 
   isSubmitting.value = true;
-
-  if (isEditMode.value && studioId.value) {
-    StudioService.updateStudio(studioId.value, form.value);
-  } else {
-    StudioService.createStudio(form.value);
+  try {
+    if (isEditMode.value && studioId.value) {
+      await StudioService.updateStudio(studioId.value, form.value);
+    } else {
+      await StudioService.createStudio(form.value);
+    }
+    router.push('/studios');
+  } finally {
+    isSubmitting.value = false;
   }
-
-  isSubmitting.value = false;
-  router.push('/studios');
 }
 
 function handleCancel(): void {
@@ -56,9 +57,9 @@ function handleCancel(): void {
 }
 
 // Lifecycle
-onMounted(() => {
+onMounted(async () => {
   if (isEditMode.value && studioId.value) {
-    const studio = StudioService.getStudioById(studioId.value);
+    const studio = await StudioService.getStudioById(studioId.value);
     if (studio) {
       form.value = {
         name: studio.name,

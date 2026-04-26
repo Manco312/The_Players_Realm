@@ -4,24 +4,25 @@
 // External Imports
 import * as L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { computed, onMounted, ref, shallowRef, watch } from 'vue';
+import { computed, onMounted, ref, shallowRef } from 'vue';
 
 // Internal Imports
 import StatCard from '@/components/StatCard.vue';
 import { StudioService } from '@/services/StudioService';
-import { useStudioStore } from '@/stores/studiostore';
 import { createOnEachFeature, createStyleFunction } from '@/utils/MapUtils';
+import type { StudioInterface } from '@/interfaces/StudioInterface';
 
 // Variables
-const studioStore = useStudioStore();
+const studios = ref<StudioInterface[]>([]);
 const mapContainer = ref<HTMLElement | null>(null);
 const mapInstance = shallowRef<L.Map | null>(null);
 const geoJsonLayer = shallowRef<L.GeoJSON<any> | null>(null);
 const geoJsonData = ref<GeoJSON.FeatureCollection | null>(null);
-const studioCountByCountry = computed(() => StudioService.getStudioCountByCountry());
-const countriesWithStudios = computed(() => StudioService.getCountriesWithStudiosCount());
-const countryWithMost = computed(() => StudioService.getCountryWithMostStudios());
-const countryWithLeast = computed(() => StudioService.getCountryWithLeastStudios());
+
+const studioCountByCountry = computed(() => StudioService.getStudioCountByCountry(studios.value));
+const countriesWithStudios = computed(() => Object.keys(studioCountByCountry.value).length);
+const countryWithMost = computed(() => StudioService.getCountryWithMostStudios(studios.value));
+const countryWithLeast = computed(() => StudioService.getCountryWithLeastStudios(studios.value));
 
 // Functions
 async function loadGeoJson(): Promise<void> {
@@ -77,19 +78,10 @@ function initMap(): void {
   loadGeoJson();
 }
 
-onMounted(() => {
+onMounted(async () => {
+  studios.value = await StudioService.getStudios();
   initMap();
 });
-
-// Watchers
-
-watch(
-  () => studioStore.studios,
-  () => {
-    updateMap();
-  },
-  { deep: true },
-);
 </script>
 
 <template>

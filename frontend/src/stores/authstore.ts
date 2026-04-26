@@ -9,8 +9,8 @@ export const useAuthStore = defineStore('auth', () => {
 
   const isAuthenticated = computed(() => currentUser.value !== null);
 
-  const login = (email: string, password: string): boolean => {
-    const user = AuthService.login(email, password);
+  const login = async (email: string, password: string): Promise<boolean> => {
+    const user = await AuthService.login(email, password);
 
     if (!user) {
       return false;
@@ -21,7 +21,20 @@ export const useAuthStore = defineStore('auth', () => {
   };
 
   const logout = () => {
+    AuthService.logout();
     currentUser.value = null;
+  };
+
+  const restoreSession = async (): Promise<void> => {
+    const token = localStorage.getItem('token');
+    if (!token) return;
+
+    const user = await AuthService.getMe(token);
+    if (user) {
+      currentUser.value = user;
+    } else {
+      localStorage.removeItem('token');
+    }
   };
 
   return {
@@ -29,5 +42,6 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     login,
     logout,
+    restoreSession,
   };
 });

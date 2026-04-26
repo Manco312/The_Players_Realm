@@ -1,32 +1,36 @@
 // Made by: Santiago Manco
 
+// External Imports
+import axiosInstance from '@/api/axiosInstance';
+
 // Internal Imports
 import type { ChartData } from '@/types/ChartTypes';
 import type { CreateReviewDTO } from '@/dtos/CreateReviewDTO';
 import type { ReviewInterface } from '@/interfaces/ReviewInterface';
-import { useReviewStore } from '@/stores/reviewstore';
 
 export class ReviewService {
-  static getReviews(): ReviewInterface[] {
-    return useReviewStore().reviews;
+  static async getReviews(): Promise<ReviewInterface[]> {
+    const { data: reviews } = await axiosInstance.get<ReviewInterface[]>('/api/reviews');
+    return reviews;
   }
 
-  static getReviewsByVideogameId(videogameId: number): ReviewInterface[] {
-    return useReviewStore().reviews.filter((review) => review.videogameId === videogameId);
+  static async getReviewsByVideogameId(videogameId: number): Promise<ReviewInterface[]> {
+    const { data: reviews } = await axiosInstance.get<ReviewInterface[]>(
+      `/api/reviews?videogameId=${videogameId}`,
+    );
+    return reviews;
   }
 
-  static createReview(review: CreateReviewDTO): void {
-    const store = useReviewStore();
-    const nextId = store.reviews.length > 0 ? Math.max(...store.reviews.map((r) => r.id)) + 1 : 1;
-
-    store.reviews.push({
-      id: nextId,
-      ...review,
+  static async createReview(review: CreateReviewDTO): Promise<ReviewInterface> {
+    const { data: createdReview } = await axiosInstance.post<ReviewInterface>('/api/reviews', {
+      comment: review.comment,
+      rating: review.rating,
+      videogameId: review.videogameId,
     });
+    return createdReview;
   }
 
-  static getRatingDistribution(): ChartData {
-    const reviews = useReviewStore().reviews;
+  static getRatingDistribution(reviews: ReviewInterface[]): ChartData {
     const ratingCounts: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
 
     reviews.forEach((review) => {
@@ -46,9 +50,5 @@ export class ReviewService {
         },
       ],
     };
-  }
-
-  static getTotalReviews(): number {
-    return useReviewStore().reviews.length;
   }
 }

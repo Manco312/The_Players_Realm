@@ -1,28 +1,51 @@
 // Made by: Luciana Hoyos and Juan Pablo
 
+// External Imports
+import axiosInstance from '@/api/axiosInstance';
+
 // Internal Imports
 import type { ChartData } from '@/types/ChartTypes';
-import { useStudioStore } from '@/stores/studiostore';
 import { COUNTRY_CODE_MAP } from '@/constants/countryCodeMap';
 import type { CreateStudioDTO } from '@/dtos/CreateStudioDTO';
 import type { UpdateStudioDTO } from '@/dtos/UpdateStudioDTO';
 import type { StudioInterface } from '@/interfaces/StudioInterface';
 
 export class StudioService {
-  static getStudios(): StudioInterface[] {
-    return useStudioStore().studios;
+  static async getStudios(): Promise<StudioInterface[]> {
+    const { data: studios } = await axiosInstance.get<StudioInterface[]>('/api/studios');
+    return studios;
   }
 
-  static getStudioById(id: number): StudioInterface | undefined {
-    return useStudioStore().studios.find((studio) => studio.id === id);
+  static async getStudioById(id: number): Promise<StudioInterface | null> {
+    try {
+      const { data: studio } = await axiosInstance.get<StudioInterface>(`/api/studios/${id}`);
+      return studio;
+    } catch {
+      return null;
+    }
   }
 
-  static getTotalStudios(): number {
-    return useStudioStore().studios.length;
+  static async createStudio(studio: CreateStudioDTO): Promise<StudioInterface> {
+    const { data: createdStudio } = await axiosInstance.post<StudioInterface>(
+      '/api/studios',
+      studio,
+    );
+    return createdStudio;
   }
 
-  static getStudioCountByCountry(): Record<string, number> {
-    const studios = useStudioStore().studios;
+  static async updateStudio(id: number, studio: UpdateStudioDTO): Promise<StudioInterface> {
+    const { data: updatedStudio } = await axiosInstance.patch<StudioInterface>(
+      `/api/studios/${id}`,
+      studio,
+    );
+    return updatedStudio;
+  }
+
+  static async deleteStudio(id: number): Promise<void> {
+    await axiosInstance.delete(`/api/studios/${id}`);
+  }
+
+  static getStudioCountByCountry(studios: StudioInterface[]): Record<string, number> {
     const countryCounts: Record<string, number> = {};
 
     studios.forEach((studio) => {
@@ -36,8 +59,10 @@ export class StudioService {
     return countryCounts;
   }
 
-  static getCountryWithMostStudios(): { country: string; count: number } | null {
-    const countryCounts = this.getStudioCountByCountry();
+  static getCountryWithMostStudios(
+    studios: StudioInterface[],
+  ): { country: string; count: number } | null {
+    const countryCounts = this.getStudioCountByCountry(studios);
     const entries = Object.entries(countryCounts);
 
     if (entries.length === 0) return null;
@@ -49,8 +74,10 @@ export class StudioService {
     return { country, count };
   }
 
-  static getCountryWithLeastStudios(): { country: string; count: number } | null {
-    const countryCounts = this.getStudioCountByCountry();
+  static getCountryWithLeastStudios(
+    studios: StudioInterface[],
+  ): { country: string; count: number } | null {
+    const countryCounts = this.getStudioCountByCountry(studios);
     const entries = Object.entries(countryCounts);
 
     if (entries.length === 0) return null;
@@ -62,48 +89,7 @@ export class StudioService {
     return { country, count };
   }
 
-  static getCountriesWithStudiosCount(): number {
-    return Object.keys(this.getStudioCountByCountry()).length;
-  }
-
-  static getUniqueCountries(): string[] {
-    const studios = useStudioStore().studios;
-    return [...new Set(studios.map((studio) => studio.country))];
-  }
-
-  static createStudio(studio: CreateStudioDTO): void {
-    const store = useStudioStore();
-    const nextId = store.studios.length > 0 ? Math.max(...store.studios.map((s) => s.id)) + 1 : 1;
-
-    store.studios.push({
-      id: nextId,
-      ...studio,
-    });
-  }
-
-  static updateStudio(id: number, studio: UpdateStudioDTO): void {
-    const store = useStudioStore();
-    const index = store.studios.findIndex((s) => s.id === id);
-
-    if (index !== -1) {
-      store.studios[index] = {
-        ...store.studios[index],
-        ...studio,
-      } as StudioInterface;
-    }
-  }
-
-  static deleteStudio(id: number): void {
-    const store = useStudioStore();
-    const index = store.studios.findIndex((studio) => studio.id === id);
-
-    if (index !== -1) {
-      store.studios.splice(index, 1);
-    }
-  }
-
-  static getStudiosByCountry(): ChartData {
-    const studios = useStudioStore().studios;
+  static getStudiosByCountry(studios: StudioInterface[]): ChartData {
     const countryCounts: Record<string, number> = {};
 
     studios.forEach((studio) => {

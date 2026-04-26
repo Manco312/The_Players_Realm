@@ -2,7 +2,7 @@
 // Made by: Santiago Manco
 
 // External Imports
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { RouterLink } from 'vue-router';
 
 // Internal Imports
@@ -14,23 +14,44 @@ import { ReviewService } from '@/services/ReviewService';
 import { StudioService } from '@/services/StudioService';
 import { UserService } from '@/services/UserService';
 import { VideogameService } from '@/services/VideogameService';
+import type { ReviewInterface } from '@/interfaces/ReviewInterface';
+import type { StudioInterface } from '@/interfaces/StudioInterface';
+import type { UserInterface } from '@/interfaces/UserInterface';
+import type { VideogameInterface } from '@/interfaces/VideogameInterface';
 
 // Variables
-const salesChartData = computed(() => VideogameService.getSalesByGame());
+const videogames = ref<VideogameInterface[]>([]);
+const studios = ref<StudioInterface[]>([]);
+const reviews = ref<ReviewInterface[]>([]);
+const users = ref<UserInterface[]>([]);
 
-const genreChartData = computed(() => VideogameService.getVideogamesByGenre());
+const salesChartData = computed(() => VideogameService.getSalesByGame(videogames.value));
 
-const studioCountryChartData = computed(() => StudioService.getStudiosByCountry());
+const genreChartData = computed(() => VideogameService.getVideogamesByGenre(videogames.value));
 
-const ratingChartData = computed(() => ReviewService.getRatingDistribution());
+const studioCountryChartData = computed(() => StudioService.getStudiosByCountry(studios.value));
 
-const releaseYearChartData = computed(() => VideogameService.getGamesByReleaseYear());
+const ratingChartData = computed(() => ReviewService.getRatingDistribution(reviews.value));
 
-const totalReviews = computed(() => ReviewService.getTotalReviews());
+const releaseYearChartData = computed(() =>
+  VideogameService.getGamesByReleaseYear(videogames.value),
+);
 
-const totalUsers = computed(() => UserService.getTotalUsers());
+const totalReviews = computed(() => reviews.value.length);
 
-const adminUsers = computed(() => UserService.getAdminUsers());
+const totalUsers = computed(() => users.value.length);
+
+const adminUsers = computed(() => users.value.filter((u) => u.role === 'Admin'));
+
+// Lifecycle
+onMounted(async () => {
+  [videogames.value, studios.value, reviews.value, users.value] = await Promise.all([
+    VideogameService.getVideogames(),
+    StudioService.getStudios(),
+    ReviewService.getReviews(),
+    UserService.getUsers(),
+  ]);
+});
 </script>
 
 <template>

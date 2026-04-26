@@ -17,10 +17,10 @@ const router = useRouter();
 const authStore = useAuthStore();
 
 // Functions
-const handleLogin = () => {
+const handleLogin = async () => {
   errorMessage.value = '';
 
-  const success = authStore.login(email.value, password.value);
+  const success = await authStore.login(email.value, password.value);
 
   if (!success) {
     errorMessage.value = 'Invalid email or password.';
