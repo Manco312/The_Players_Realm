@@ -22,13 +22,17 @@ export class UsersService {
   async findAll(): Promise<Omit<User, 'password'>[]> {
     const users = await this.repo.find();
 
-    return users.map(({ password: _, ...user }) => user);
+    return users.map(({ password, ...user }) => {
+      void password;
+      return user;
+    });
   }
 
   async findOne(id: number): Promise<Omit<User, 'password'>> {
     const user = await this.repo.findOne({ where: { id } });
     if (!user) throw new NotFoundException(`User #${id} not found`);
-    const { password: _, ...result } = user;
+    const { password, ...result } = user;
+    void password;
     return result;
   }
 
@@ -43,7 +47,8 @@ export class UsersService {
     const hashed = await bcrypt.hash(dto.password, 10);
     const user = this.repo.create({ ...dto, password: hashed });
     const saved = await this.repo.save(user);
-    const { password: _, ...result } = saved;
+    const { password, ...result } = saved;
+    void password;
     return result;
   }
 
@@ -54,13 +59,14 @@ export class UsersService {
     const user = await this.repo.findOne({ where: { id } });
     if (!user) throw new NotFoundException(`User #${id} not found`);
 
-    if ((dto as any).password) {
-      (dto as any).password = await bcrypt.hash((dto as any).password, 10);
+    if (dto.password) {
+      dto.password = await bcrypt.hash(dto.password, 10);
     }
 
     Object.assign(user, dto);
     const saved = await this.repo.save(user);
-    const { password: _, ...result } = saved;
+    const { password, ...result } = saved;
+    void password;
     return result;
   }
 

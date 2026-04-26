@@ -15,6 +15,7 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
+import { Request as ExpressRequest } from 'express';
 
 // Internal Imports
 import { ReviewsService } from './reviews.service';
@@ -33,7 +34,10 @@ export class ReviewsController {
   }
 
   @Post()
-  create(@Body() dto: CreateReviewDto, @Request() req: any) {
+  create(
+    @Body() dto: CreateReviewDto,
+    @Request() req: ExpressRequest & { user: { id: number } },
+  ) {
     return this.reviewsService.create(dto, req.user.id);
   }
 
