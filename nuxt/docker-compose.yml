@@ -1,0 +1,10 @@
+services:
+  nuxt:
+    build:
+      context: .
+      args:
+        NUXT_PUBLIC_API_BASE: ${NUXT_PUBLIC_API_BASE:-http://localhost:3000}
+    ports:
+      - "8080:3000"
+    environment:
+      NUXT_PUBLIC_API_BASE: ${NUXT_PUBLIC_API_BASE:-http://localhost:3000}
