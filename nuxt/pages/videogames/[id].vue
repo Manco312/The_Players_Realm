@@ -1,61 +1,35 @@
-<template>
-  <div>
-    <NuxtLink to="/videogames" class="back-link">← Back to Videogames</NuxtLink>
-
-    <div v-if="pending" class="status-message">Loading game...</div>
-
-    <div v-else-if="error" class="status-message error">
-      <h1>Game not found</h1>
-      <p>The game you are looking for does not exist.</p>
-      <NuxtLink to="/videogames" class="back-link" style="display: inline-block; margin-top: 1rem">
-        ← Back to Videogames
-      </NuxtLink>
-    </div>
-
-    <div v-else-if="data" class="game-detail">
-      <div class="game-top">
-        <div class="badges">
-          <span class="badge-genre">{{ data.genre }}</span>
-          <span :class="['badge-mode', data.online ? 'online' : 'offline']">
-            {{ data.online ? '🌐 Online' : '💻 Offline' }}
-          </span>
-        </div>
-        <h1 class="game-title">{{ data.name }}</h1>
-        <p class="game-studio">by {{ data.studio }}</p>
-      </div>
-
-      <div class="game-body">
-        <p class="game-description">{{ data.description }}</p>
-
-        <div class="stats-grid">
-          <div class="stat">
-            <span class="stat-label">Director</span>
-            <span class="stat-value">{{ data.director }}</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Release Year</span>
-            <span class="stat-value">{{ data.releaseYear }}</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Price</span>
-            <span class="stat-value stat-price">{{ data.price > 0 ? `$${data.price}` : 'Free to Play' }}</span>
-          </div>
-          <div class="stat">
-            <span class="stat-label">Total Sales</span>
-            <span class="stat-value">{{ formatSales(data.totalSales) }}</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
+// Made by: Santiago Manco
+
+// Internal Imports
 import type { Videogame } from '~/types/videogame'
+
+// Variables
+interface Stat {
+  label: string
+  value: string
+  valueClass?: string
+}
 
 const route = useRoute()
 const { data, pending, error } = await useFetch<Videogame>(`/api/videogames/${route.params.id}`)
 
+const stats = computed((): Stat[] =>
+  data.value
+    ? [
+        { label: 'Director', value: data.value.director },
+        { label: 'Release Year', value: String(data.value.releaseYear) },
+        {
+          label: 'Price',
+          value: data.value.price > 0 ? `$${data.value.price}` : 'Free to Play',
+          valueClass: 'fw-semibold text-success mb-0',
+        },
+        { label: 'Total Sales', value: formatSales(data.value.totalSales) },
+      ]
+    : [],
+)
+
+// Functions
 function formatSales(sales: number): string {
   if (sales === 0) return 'N/A'
   if (sales >= 1_000_000) return `${(sales / 1_000_000).toFixed(1)}M units`
@@ -63,136 +37,43 @@ function formatSales(sales: number): string {
 }
 </script>
 
-<style scoped>
-.back-link {
-  display: inline-block;
-  color: #7c3aed;
-  font-weight: 500;
-  margin-bottom: 2rem;
-  transition: color 0.2s;
-}
+<template>
+  <div>
+    <NuxtLink to="/videogames" class="d-inline-block text-primary fw-medium mb-4">← Back to Videogames</NuxtLink>
 
-.back-link:hover {
-  color: #9061f9;
-}
+    <div v-if="pending" class="text-center py-5 text-secondary fs-5">Loading game...</div>
 
-.status-message {
-  text-align: center;
-  padding: 4rem;
-  color: #9ca3af;
-  font-size: 1.125rem;
-}
+    <div v-else-if="error" class="text-center py-5">
+      <h1 class="h2 mb-2">Game not found</h1>
+      <p class="text-secondary mb-4">The game you are looking for does not exist.</p>
+      <NuxtLink to="/videogames" class="text-primary fw-medium">← Back to Videogames</NuxtLink>
+    </div>
 
-.status-message.error {
-  color: #e5e7eb;
-}
+    <div v-else-if="data" class="mx-auto" style="max-width: 900px">
+      <div class="mb-4">
+        <div class="d-flex gap-2 mb-3">
+          <span class="badge rounded-pill bg-primary bg-opacity-25 text-primary">{{ data.genre }}</span>
+          <span :class="data.online ? 'text-info' : 'text-secondary'" class="badge rounded-pill bg-body-secondary">
+            {{ data.online ? '🌐 Online' : '💻 Offline' }}
+          </span>
+        </div>
+        <h1 class="display-5 fw-bold mb-1">{{ data.name }}</h1>
+        <p class="text-primary fs-5 fw-medium">by {{ data.studio }}</p>
+      </div>
 
-.status-message.error h1 {
-  font-size: 2rem;
-  margin-bottom: 0.75rem;
-}
-
-.status-message.error p {
-  color: #9ca3af;
-}
-
-.game-detail {
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.game-top {
-  margin-bottom: 2rem;
-}
-
-.badges {
-  display: flex;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.badge-genre {
-  background-color: rgba(124, 58, 237, 0.2);
-  color: #a78bfa;
-  padding: 0.25rem 0.875rem;
-  border-radius: 9999px;
-  font-size: 0.8125rem;
-  font-weight: 600;
-}
-
-.badge-mode {
-  font-size: 0.875rem;
-  font-weight: 500;
-  padding: 0.25rem 0.875rem;
-  border-radius: 9999px;
-  background-color: #1e1e2e;
-}
-
-.badge-mode.online {
-  color: #06b6d4;
-}
-
-.badge-mode.offline {
-  color: #6b7280;
-}
-
-.game-title {
-  font-size: 2.75rem;
-  font-weight: 800;
-  color: #e5e7eb;
-  margin-bottom: 0.5rem;
-  line-height: 1.15;
-}
-
-.game-studio {
-  color: #7c3aed;
-  font-size: 1.125rem;
-  font-weight: 500;
-}
-
-.game-body {
-  background-color: #12121a;
-  border: 1px solid #1e1e2e;
-  border-radius: 1rem;
-  padding: 2rem;
-}
-
-.game-description {
-  color: #d1d5db;
-  font-size: 1.0625rem;
-  line-height: 1.8;
-  margin-bottom: 2rem;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid #1e1e2e;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.5rem;
-}
-
-.stat {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-}
-
-.stat-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #6b7280;
-}
-
-.stat-value {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #e5e7eb;
-}
-
-.stat-price {
-  color: #10b981;
-}
-</style>
+      <div class="card">
+        <div class="card-body p-4">
+          <p class="text-secondary lh-lg mb-4 pb-4 border-bottom">{{ data.description }}</p>
+          <div class="row row-cols-2 row-cols-md-4 g-3">
+            <div v-for="stat in stats" :key="stat.label" class="col">
+              <p class="text-secondary text-uppercase fw-semibold small mb-1" style="letter-spacing:.05em">
+                {{ stat.label }}
+              </p>
+              <p :class="stat.valueClass ?? 'fw-semibold mb-0'">{{ stat.value }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

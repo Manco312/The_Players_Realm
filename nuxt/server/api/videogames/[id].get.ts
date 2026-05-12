@@ -1,6 +1,10 @@
+// Made by: Santiago Manco
+
+// Internal Imports
 import { videogames } from '~/server/data/videogames'
 
 export default defineEventHandler((event) => {
+  // Variables
   const id = parseInt(getRouterParam(event, 'id') ?? '')
 
   if (isNaN(id)) {

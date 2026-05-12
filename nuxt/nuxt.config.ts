@@ -1,6 +1,12 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
+  app: {
+    head: {
+      htmlAttrs: { 'data-bs-theme': 'dark' },
+    },
+  },
+
   runtimeConfig: {
     public: {
       apiBase: 'http://localhost:3000',

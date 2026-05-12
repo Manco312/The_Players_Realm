@@ -1,5 +1,9 @@
+// Made by: Santiago Manco
+
+// Internal Imports
 import type { Videogame } from '~/types/videogame'
 
+// Variables
 export const videogames: Videogame[] = [
   {
     id: 1,
